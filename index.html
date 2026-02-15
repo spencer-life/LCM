@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Schofield Advisory Group - Life Cycle Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700;800&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
+<style>
+  :root{
+    --primary-blue: #60a5fa;
+    --royal-blue: #3b82f6;
+    --light-blue: #93c5fd;
+    --extra-light-blue: #dbeafe;
+    --blue-gradient: linear-gradient(135deg, rgba(147, 197, 253, 0.3) 0%, rgba(96, 165, 250, 0.4) 50%, rgba(59, 130, 246, 0.3) 100%);
+    --blue-gradient-solid: linear-gradient(135deg, #93c5fd 0%, #60a5fa 50%, #3b82f6 100%);
+    --ink:#1e293b;
+    --dark-gray:#334155;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --grid:#f8fafc;
+    --panel:#ffffff;
+    --card:#ffffff;
+    --primary:#60a5fa;
+    --primary-hover:#3b82f6;
+    --primary-light:#93c5fd;
+    --bg:#fefcf7;
+    --cream: #fefcf7;
+    --table-alt:#f8fafc;
+    --hover-row:#f1f5f9;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --radius-xl: 24px;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --shadow-xs: 0 2px 10px rgba(0,0,0,.05);
+    --shadow-sm: 0 6px 18px rgba(0,0,0,.08);
+    --shadow-md: 0 12px 30px rgba(0,0,0,.16);
+    --shadow-lg: 0 26px 60px rgba(0,0,0,.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    padding-bottom: 80px;
+  }
+  .currency-value, .number-value,
+  input[type="number"],
+  .stat-value,
+  .total-value,
+  .dashboard-value,
+  td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6) {
+    font-family: 'Roboto', 'Inter', sans-serif !important;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+  .dashboard-value { font-weight: 600; font-size: 2rem; letter-spacing: -0.02em; }
+  .section-total {
+    font-weight: 700; font-size: 1.25rem;
+    font-family: 'Roboto', 'Inter', sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: saturate(120%) blur(20px);
+    -webkit-backdrop-filter: saturate(120%) blur(20px);
+    border: 1px solid rgba(96, 165, 250, 0.12);
+  }
+  .topbar{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: saturate(150%) blur(20px);
+    -webkit-backdrop-filter: saturate(150%) blur(20px);
+    border-bottom: 1px solid rgba(96, 165, 250, 0.15);
+    box-shadow: 0 2px 30px rgba(96, 165, 250, 0.08);
+    padding: 20px 40px;
+  }
+  .topbar-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1800px; margin: 0 auto; gap: 30px; }
+  .topbar-branding { display: flex; align-items: center; gap: 20px; }
+  .topbar-logo { height: 50px; width: auto; object-fit: contain; }
+  .topbar h1 {
+    font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700;
+    letter-spacing: 0.3px; margin: 0; color: var(--ink);
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .menu-toggle {
+    display: none; border: 1px solid rgba(255,255,255,0.2); background: transparent;
+    color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+    font-size: 18px; transition: all 0.3s ease;
+  }
+  .menu-toggle:hover { background: rgba(255,255,255,0.1); }
+  .mobile-drawer {
+    position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
+    background: linear-gradient(180deg, #1e40af, #1e3a5f);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+    transform: translateX(-100%); transition: transform 0.3s ease;
+    z-index: 100; overflow-y: auto; padding-top: 70px;
+  }
+  .mobile-drawer.open { transform: translateX(0); }
+  .mobile-drawer a {
+    display: block; padding: 16px 24px; color: #e6eef7; text-decoration: none;
+    font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;
+  }
+  .mobile-drawer a:hover { background: rgba(255,255,255,0.04); color: #bfdbfe; }
+  .mobile-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6); z-index: 99; opacity: 0;
+    pointer-events: none; transition: opacity 0.3s;
+  }
+  .mobile-overlay.active { opacity: 1; pointer-events: all; }
+  .mobile-footer {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: white; border-top: 1px solid var(--line);
+    padding: 12px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); z-index: 40;
+  }
+  .mobile-footer-actions { display: flex; gap: 8px; justify-content: space-around; }
+  .mobile-footer-btn {
+    flex: 1; padding: 10px 16px; border: none; border-radius: 8px;
+    font-weight: 600; font-size: 0.85rem; cursor: pointer;
+    transition: all 0.2s ease; display: flex; align-items: center;
+    justify-content: center; gap: 6px;
+  }
+  .mobile-footer-btn.primary { background: var(--blue-gradient); color: white; }
+  .mobile-footer-btn.secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
+  .container { max-width: 1800px; margin: 0 auto; padding: 30px 50px; }
+  .section {
+    background: rgba(255,255,255,0.98); border-radius: var(--radius-lg);
+    padding: 40px; margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(96,165,250,0.06);
+    border: 1px solid rgba(96,165,250,0.08); transition: all 0.3s ease;
+  }
+  .section:hover { box-shadow: var(--shadow-md); }
+  .section.glass {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(150%) blur(12px);
+    -webkit-backdrop-filter: saturate(150%) blur(12px);
+  }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--grid);
+  }
+  .section-title {
+    font-family: 'Oswald', sans-serif; font-size: 1.75rem; font-weight: 700;
+    color: var(--ink); display: flex; align-items: center; gap: 12px;
+  }
+  .section-icon { color: var(--primary); font-size: 1.5rem; }
+  .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px; }
+  @media (min-width: 1400px) { .profile-grid { grid-template-columns: repeat(4, 1fr); } }
+  .profile-card {
+    background: linear-gradient(135deg, rgba(147,197,253,0.08) 0%, rgba(96,165,250,0.06) 100%);
+    border: 1px solid rgba(96,165,250,0.15); border-radius: var(--radius-md);
+    padding: 25px; transition: all 0.3s ease;
+  }
+  .profile-card:hover { border-color: rgba(96,165,250,0.3); box-shadow: 0 4px 15px rgba(96,165,250,0.1); }
+  .profile-card h3 {
+    font-family: 'Oswald', sans-serif; color: var(--primary);
+    font-size: 1.25rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+  }
+  .input-group { margin-bottom: 15px; }
+  .input-group label { display: block; font-weight: 600; color: var(--dark-gray); margin-bottom: 6px; font-size: 0.9rem; }
+  .input-group input, .input-group select {
+    width: 100%; padding: 12px 15px; border: 2px solid var(--line);
+    border-radius: var(--radius-sm); font-size: 1rem;
+    font-family: 'Roboto', 'Inter', sans-serif; transition: all 0.2s ease;
+  }
+  .input-group input:focus, .input-group select:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .dash-card {
+    background: white; border-radius: var(--radius-md); padding: 24px;
+    box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease; position: relative; overflow: hidden;
+  }
+  .dash-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 4px; background: var(--blue-gradient);
+  }
+  .dash-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .dash-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px; }
+  .dash-value { font-family: 'Roboto', sans-serif; font-size: 2rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .dash-icon { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: var(--primary); opacity: 0.2; }
+  .table-container {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px; border-radius: var(--radius-md);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  table { width: 100%; border-collapse: collapse; background: white; min-width: 800px; }
+  thead { background: var(--blue-gradient); color: white; position: sticky; top: 0; z-index: 10; }
+  th { padding: 15px 12px; text-align: left; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--grid); transition: background 0.2s ease; }
+  tbody tr:hover { background: var(--hover-row); }
+  td { padding: 12px; }
+  td:first-child { position: sticky; left: 0; background: white; z-index: 5; font-weight: 600; }
+  tbody tr:hover td:first-child { background: var(--hover-row); }
+  td input {
+    width: 100%; min-width: 80px; padding: 8px 10px;
+    border: 1px solid var(--line); border-radius: 6px;
+    font-size: 0.9rem; transition: all 0.2s ease;
+  }
+  td input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+  .total-row { background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.08) 100%); font-weight: 700; }
+  .total-row td { padding: 15px 12px; font-size: 1.1rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 24px; border: none; border-radius: 10px; font-weight: 600;
+    font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif; text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); color: white;
+    box-shadow: 0 4px 15px rgba(96,165,250,0.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(96,165,250,0.35);
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  }
+  .btn-secondary { background: rgba(96,165,250,0.08); color: var(--primary); border: 1.5px solid rgba(96,165,250,0.3); }
+  .btn-secondary:hover { background: rgba(96,165,250,0.15); border-color: var(--primary); }
+  .btn-small { padding: 6px 12px; font-size: 0.85rem; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-danger { background: var(--danger); color: white; }
+  .scenario-controls {
+    display: flex; gap: 10px; align-items: center; margin: 20px 0;
+    padding: 15px; background: white; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xs); flex-wrap: wrap;
+  }
+  .scenario-dropdown {
+    padding: 10px 15px; border: 2px solid var(--line); border-radius: 8px;
+    background: white; font-family: 'Inter', sans-serif; font-size: 0.95rem;
+    cursor: pointer; min-width: 200px; transition: all 0.2s ease;
+  }
+  .scenario-dropdown:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  .save-indicator {
+    position: fixed; top: 80px; right: 20px; background: white;
+    padding: 12px 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    font-size: 0.9rem; color: var(--muted); z-index: 1000;
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .save-indicator.visible { opacity: 1; }
+  .save-indicator.saving { color: var(--primary); }
+  .chart-container {
+    background: white; border-radius: var(--radius-md); padding: 25px;
+    margin-bottom: 30px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05);
+  }
+  .chart-title {
+    font-family: 'Oswald', sans-serif; font-size: 1.3rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .progress-section {
+    background: linear-gradient(135deg, rgba(147,197,253,0.1) 0%, rgba(96,165,250,0.08) 100%);
+    border-radius: var(--radius-md); padding: 25px; margin-bottom: 30px;
+  }
+  .progress-item {
+    display: flex; align-items: center; gap: 15px; padding: 15px;
+    background: white; border-radius: 8px; margin-bottom: 12px; transition: all 0.2s ease;
+  }
+  .progress-item:hover { box-shadow: var(--shadow-xs); }
+  .progress-item.completed { background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(5,150,105,0.1) 100%); }
+  .progress-item input[type="checkbox"] { width: 24px; height: 24px; cursor: pointer; }
+  .modal {
+    display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+    width: 100%; height: 100%; background-color: rgba(0,0,0,0.6);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-content {
+    background-color: white; margin: 5% auto; padding: 35px;
+    border-radius: var(--radius-lg); width: 90%; max-width: 700px;
+    max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow-lg);
+    animation: slideDown 0.3s ease;
+  }
+  @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid var(--line);
+  }
+  .modal-header h2 { margin: 0; color: var(--ink); font-family: 'Oswald', sans-serif; font-size: 1.75rem; }
+  .close-modal {
+    font-size: 1.75rem; cursor: pointer; color: var(--muted);
+    transition: color 0.3s ease; background: none; border: none; padding: 0;
+    width: 36px; height: 36px; display: flex; align-items: center;
+    justify-content: center; border-radius: 50%;
+  }
+  .close-modal:hover { color: var(--ink); background: var(--grid); }
+  .scenario-list { list-style: none; padding: 0; margin: 0; }
+  .scenario-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px; margin-bottom: 12px; background: var(--grid);
+    border-radius: var(--radius-sm); transition: all 0.2s ease;
+  }
+  .scenario-item:hover { background: var(--hover-row); box-shadow: var(--shadow-xs); }
+  .scenario-item-info { flex: 1; }
+  .scenario-item-name { font-weight: 700; color: var(--ink); margin-bottom: 5px; font-size: 1.05rem; }
+  .scenario-item-date { font-size: 0.85rem; color: var(--muted); }
+  .scenario-item-actions { display: flex; gap: 8px; }
+  .scenario-btn {
+    padding: 8px 16px; border: 2px solid var(--line); border-radius: 6px;
+    background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  .scenario-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+  .scenario-btn.delete:hover { background: var(--danger); border-color: var(--danger); }
+  .collapsible-section { margin-bottom: 25px; }
+  .collapsible-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, rgba(147,197,253,0.15) 0%, rgba(96,165,250,0.12) 100%);
+    color: var(--ink); border-radius: var(--radius-md); cursor: pointer;
+    transition: all 0.3s ease; border: 1px solid rgba(96,165,250,0.2);
+  }
+  .collapsible-header:hover {
+    background: linear-gradient(135deg, rgba(147,197,253,0.22) 0%, rgba(96,165,250,0.18) 100%);
+    border-color: rgba(96,165,250,0.35); box-shadow: 0 4px 15px rgba(96,165,250,0.12);
+  }
+  .collapsible-header h3 {
+    font-family: 'Oswald', sans-serif; font-size: 1.3rem; margin: 0;
+    display: flex; align-items: center; gap: 12px; color: var(--primary); font-weight: 600;
+  }
+  .collapsible-icon { transition: transform 0.3s ease; color: var(--primary); }
+  .collapsible-header.active .collapsible-icon { transform: rotate(180deg); }
+  .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .collapsible-content.active { max-height: 8000px; }
+  .collapsible-inner {
+    padding: 30px; background: rgba(255,255,255,0.98);
+    border: 1px solid rgba(96,165,250,0.12); border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+  @media (max-width: 768px) {
+    body { padding-bottom: 80px; }
+    .topbar { padding: 12px 15px; }
+    .topbar h1 { font-size: 1.15rem; }
+    .topbar-actions { display: none; }
+    .menu-toggle { display: inline-flex; }
+    .mobile-footer { display: block; }
+    .container { padding: 15px; }
+    .section { padding: 20px 15px; margin-bottom: 20px; }
+    .section-title { font-size: 1.35rem; }
+    .profile-grid { grid-template-columns: 1fr; }
+    .dashboard { grid-template-columns: 1fr; }
+    .scenario-controls { flex-direction: column; align-items: stretch; }
+    .scenario-dropdown { width: 100%; }
+    .table-container { border-radius: var(--radius-sm); }
+    td:first-child { min-width: 150px; }
+    .save-indicator { top: auto; bottom: 100px; right: 15px; left: 15px; }
+    .modal-content { margin: 10% auto; padding: 25px 20px; width: 95%; }
+    .chart-container { padding: 15px; }
+    canvas { max-height: 300px !important; }
+  }
+  @media (max-width: 480px) {
+    .topbar h1 { font-size: 1rem; }
+    .dash-value { font-size: 1.5rem; }
+    .section-title { font-size: 1.2rem; }
+    .btn { padding: 10px 18px; font-size: 0.9rem; }
+  }
+  @media print {
+    .topbar,.mobile-footer,.mobile-drawer,.mobile-overlay,.save-indicator,.scenario-controls,.btn,button { display: none !important; }
+    .section { break-inside: avoid; page-break-inside: avoid; }
+    body { background: white; padding-bottom: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<nav class="mobile-drawer" id="mobileDrawer">
+  <a href="#client-info"><i class="fas fa-user"></i> Client Information</a>
+  <a href="#dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+  <a href="#tax-deferred"><i class="fas fa-piggy-bank"></i> Tax-Deferred Accounts</a>
+  <a href="#tax-free"><i class="fas fa-shield-alt"></i> Tax-Free Accounts</a>
+  <a href="#taxable"><i class="fas fa-wallet"></i> Taxable Accounts</a>
+  <a href="#cash"><i class="fas fa-money-bill-wave"></i> Cash Accounts</a>
+  <a href="#real-estate"><i class="fas fa-home"></i> Real Estate</a>
+  <a href="#charts"><i class="fas fa-chart-pie"></i> Analysis</a>
+  <a href="#progress"><i class="fas fa-tasks"></i> Progress</a>
+</nav>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-branding">
+      <img src="https://storage.googleapis.com/msgsndr/7g1UJAjfqkR2Xb5uWiMw/media/690bc966d79eed8ef698fbea.png" alt="Schofield Advisory Group" class="topbar-logo">
+      <h1>Life Cycle Financial Model</h1>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-small" onclick="document.getElementById('scenarioModal').style.display='block'">
+        <i class="fas fa-folder"></i> Scenarios
+      </button>
+      <button class="btn btn-secondary btn-small" onclick="exportCSV()">
+        <i class="fas fa-file-csv"></i> Export CSV
+      </button>
+      <button class="btn btn-primary btn-small" onclick="saveJSON()">
+        <i class="fas fa-save"></i> Save
+      </button>
+    </div>
+  </div>
+</div>
+<div class="save-indicator" id="saveIndicator">
+  <i class="fas fa-check-circle"></i>
+  <span id="saveText">Saved</span>
+</div>
+<div class="container">
+  <section class="section" id="client-info">
+    <div class="section-header">
+      <h2 class="section-title"><i class="fas fa-user-friends section-icon"></i> Client Information</h2>
+    </div>
+    <div class="profile-grid">
+      <div class="profile-card">
+        <h3><i class="fas fa-user"></i> Primary Client</h3>
+        <div class="input-group"><label>Full Name</label><input type="text" data-key="clientName" placeholder="John Doe"></div>
+        <div class="input-group"><label>Current Age</label><input type="number" data-key="currentAge" value="45" min="18" max="100"></div>
+        <div class="input-group"><label>Retirement Age</label><input type="number" data-key="projectedAge" value="67" min="50" max="100"></div>
+        <div class="input-group"><label>Annual Income</label><input type="number" data-key="clientIncome" placeholder="100000" step="1000"></div>
+        <div class="input-group"><label>Social Security (Monthly)</label><input type="number" data-key="socialSecurityBenefit" placeholder="2500" step="100"></div>
+        <div class="input-group"><label>Full Retirement Age</label><input type="number" data-key="fullRetirementAge" value="67" min="62" max="70"></div>
+      </div>
+      <div class="profile-card">
+        <h3><i class="fas fa-user"></i> Spouse</h3>
+        <div class="input-group"><label>Full Name</label><input type="text" data-key="spouseName" placeholder="Jane Doe"></div>
+        <div class="input-group"><label>Current Age</label><input type="number" data-key="spouseAge" placeholder="43" min="18" max="100"></div>
+        <div class="input-group"><label>Retirement Age</label><input type="number" data-key="spouseRetirementAge" placeholder="67" min="50" max="100"></div>
+        <div class="input-group"><label>Annual Income</label><input type="number" data-key="spouseIncome" placeholder="80000" step="1000"></div>
+        <div class="input-group"><label>Social Security (Monthly)</label><input type="number" data-key="spouseSocialSecurity" placeholder="2000" step="100"></div>
+        <div class="input-group"><label>Full Retirement Age</label><input type="number" data-key="spouseFullRetirementAge" value="67" min="62" max="70"></div>
+      </div>
+      <div class="profile-card">
+        <h3><i class="fas fa-cogs"></i> Planning Parameters</h3>
+        <div class="input-group"><label>Filing Status</label>
+          <select data-key="filingStatus">
+            <option value="single">Single</option>
+            <option value="married-joint" selected>Married Filing Jointly</option>
+            <option value="married-separate">Married Filing Separately</option>
+            <option value="head">Head of Household</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Expected Inflation Rate (%)</label><input type="number" data-key="inflationRate" value="3" step="0.1" min="0" max="10"></div>
+        <div class="input-group"><label>Annual Living Expenses</label><input type="number" data-key="annualExpenses" placeholder="75000" step="1000"></div>
+        <div class="input-group"><label>Email</label><input type="email" data-key="clientEmail" placeholder="client@example.com"></div>
+        <div class="input-group"><label>Phone</label><input type="tel" data-key="clientPhone" placeholder="(555) 123-4567"></div>
+        <div class="input-group"><label>Address</label><input type="text" data-key="clientAddress" placeholder="123 Main St, City, State"></div>
+      </div>
+    </div>
+  </section>
+  <div class="scenario-controls">
+    <label style="font-weight: 600;">Current Scenario:</label>
+    <select class="scenario-dropdown" id="scenarioSelect" onchange="switchScenario(this.value)">
+      <option value="default">Default Scenario</option>
+    </select>
+    <button class="btn btn-secondary btn-small" onclick="document.getElementById('scenarioModal').style.display='block'"><i class="fas fa-folder-open"></i> Manage Scenarios</button>
+    <button class="btn btn-secondary btn-small" onclick="saveCurrentScenario()"><i class="fas fa-plus"></i> Save as New</button>
+  </div>
+  <section id="dashboard">
+    <h2 class="section-title" style="margin-bottom: 20px;"><i class="fas fa-chart-bar section-icon"></i> Financial Overview</h2>
+    <div class="dashboard">
+      <div class="dash-card"><i class="fas fa-piggy-bank dash-icon"></i><div class="dash-label">Tax-Deferred Total</div><div class="dash-value" id="dashTaxDeferred">$0</div></div>
+      <div class="dash-card"><i class="fas fa-shield-alt dash-icon"></i><div class="dash-label">Tax-Free Total</div><div class="dash-value" id="dashTaxFree">$0</div></div>
+      <div class="dash-card"><i class="fas fa-wallet dash-icon"></i><div class="dash-label">Taxable Total</div><div class="dash-value" id="dashTaxable">$0</div></div>
+      <div class="dash-card"><i class="fas fa-money-bill-wave dash-icon"></i><div class="dash-label">Cash Total</div><div class="dash-value" id="dashCash">$0</div></div>
+      <div class="dash-card"><i class="fas fa-home dash-icon"></i><div class="dash-label">Real Estate Total</div><div class="dash-value" id="dashRealEstate">$0</div></div>
+      <div class="dash-card"><i class="fas fa-chart-line dash-icon"></i><div class="dash-label">Total Net Worth</div><div class="dash-value" id="dashTotal">$0</div></div>
+    </div>
+  </section>
+  <!-- Tax-Deferred Accounts -->
+  <div class="collapsible-section" id="tax-deferred">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-piggy-bank"></i> Tax-Deferred Accounts (401k, Traditional IRA, etc.)</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="table-container">
+          <table id="taxDeferredTable">
+            <thead><tr><th>Account Description</th><th>Current Value</th><th>Growth Rate (%)</th><th>Annual Contribution</th><th>Employer Match</th><th>Annual Withdrawal</th><th>Future Value</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr class="total-row"><td>TOTAL</td><td class="section-total" id="taxDeferredCurrentTotal">$0</td><td></td><td class="section-total" id="taxDeferredContribTotal">$0</td><td class="section-total" id="taxDeferredMatchTotal">$0</td><td class="section-total" id="taxDeferredWithdrawTotal">$0</td><td class="section-total" id="taxDeferredFutureTotal">$0</td><td></td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="addRow('taxDeferredTable')"><i class="fas fa-plus"></i> Add Account</button>
+      </div>
+    </div>
+  </div>
+  <!-- Tax-Free Accounts -->
+  <div class="collapsible-section" id="tax-free">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-shield-alt"></i> Tax-Free Accounts (Roth IRA, Roth 401k, HSA)</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="table-container">
+          <table id="taxFreeTable">
+            <thead><tr><th>Account Description</th><th>Current Value</th><th>Growth Rate (%)</th><th>Annual Contribution</th><th>Annual Withdrawal</th><th>Future Value</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr class="total-row"><td>TOTAL</td><td class="section-total" id="taxFreeCurrentTotal">$0</td><td></td><td class="section-total" id="taxFreeContribTotal">$0</td><td class="section-total" id="taxFreeWithdrawTotal">$0</td><td class="section-total" id="taxFreeFutureTotal">$0</td><td></td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="addRow('taxFreeTable')"><i class="fas fa-plus"></i> Add Account</button>
+      </div>
+    </div>
+  </div>
+  <!-- Taxable Accounts -->
+  <div class="collapsible-section" id="taxable">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-wallet"></i> Taxable Brokerage Accounts</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="table-container">
+          <table id="taxableTable">
+            <thead><tr><th>Account Description</th><th>Current Value</th><th>Growth Rate (%)</th><th>Annual Contribution</th><th>Annual Withdrawal</th><th>Future Value</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr class="total-row"><td>TOTAL</td><td class="section-total" id="taxableCurrentTotal">$0</td><td></td><td class="section-total" id="taxableContribTotal">$0</td><td class="section-total" id="taxableWithdrawTotal">$0</td><td class="section-total" id="taxableFutureTotal">$0</td><td></td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="addRow('taxableTable')"><i class="fas fa-plus"></i> Add Account</button>
+      </div>
+    </div>
+  </div>
+  <!-- Cash Accounts -->
+  <div class="collapsible-section" id="cash">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-money-bill-wave"></i> Cash & Savings Accounts</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="table-container">
+          <table id="cashTable">
+            <thead><tr><th>Account Description</th><th>Current Value</th><th>Interest Rate (%)</th><th>Monthly Deposit</th><th>Monthly Withdrawal</th><th>Future Value</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr class="total-row"><td>TOTAL</td><td class="section-total" id="cashCurrentTotal">$0</td><td></td><td class="section-total" id="cashDepositTotal">$0</td><td class="section-total" id="cashWithdrawTotal">$0</td><td class="section-total" id="cashFutureTotal">$0</td><td></td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="addRow('cashTable')"><i class="fas fa-plus"></i> Add Account</button>
+      </div>
+    </div>
+  </div>
+  <!-- Real Estate -->
+  <div class="collapsible-section" id="real-estate">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-home"></i> Real Estate Assets</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="table-container">
+          <table id="realEstateTable">
+            <thead><tr><th>Property Description</th><th>Current Value</th><th>Appreciation Rate (%)</th><th>Annual Income</th><th>Annual Expenses</th><th>Future Value</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr class="total-row"><td>TOTAL</td><td class="section-total" id="realEstateCurrentTotal">$0</td><td></td><td class="section-total" id="realEstateIncomeTotal">$0</td><td class="section-total" id="realEstateExpenseTotal">$0</td><td class="section-total" id="realEstateFutureTotal">$0</td><td></td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="addRow('realEstateTable')"><i class="fas fa-plus"></i> Add Property</button>
+      </div>
+    </div>
+  </div>
+  <!-- Tax Planning & Optimization -->
+  <div class="collapsible-section" id="tax-planning">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-file-invoice-dollar"></i> Tax Planning & Optimization</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="profile-grid" style="margin-bottom: 25px;">
+          <div class="profile-card">
+            <h4 style="margin-bottom: 15px; color: var(--primary);">Current Tax Bracket</h4>
+            <div class="input-group"><label>Tax Rate</label><input type="text" id="currentTaxRate" readonly style="background: var(--grid);"></div>
+            <div class="input-group"><label>Income Range</label><input type="text" id="currentTaxRange" readonly style="background: var(--grid);"></div>
+            <div class="input-group"><label>Your Position</label><input type="text" id="taxPosition" readonly style="background: var(--grid);"></div>
+          </div>
+        </div>
+        <h4 style="margin-bottom: 15px; font-family: 'Oswald', sans-serif; color: var(--ink);"><i class="fas fa-table"></i> 2024 Federal Tax Brackets</h4>
+        <div class="table-container" style="margin-bottom: 30px;">
+          <table id="bracketTable"><thead><tr><th>Tax Rate</th><th>Income Range</th><th>Your Position</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div style="background: linear-gradient(135deg, rgba(147,197,253,0.1) 0%, rgba(96,165,250,0.08) 100%); padding: 25px; border-radius: var(--radius-md); border: 2px solid rgba(96,165,250,0.15);">
+          <h4 style="margin-bottom: 10px; font-family: 'Oswald', sans-serif; color: var(--primary); font-size: 1.25rem;"><i class="fas fa-calculator"></i> Roth Conversion Calculator</h4>
+          <p style="color: var(--muted); margin-bottom: 20px; font-size: 0.95rem;">Converting Traditional IRA/401(k) to Roth IRA creates tax-free growth, but you'll pay taxes now on the converted amount.</p>
+          <div class="profile-grid">
+            <div class="input-group"><label>Conversion Amount</label><input type="number" id="conversionAmount" placeholder="50000" oninput="debouncedConversion()"></div>
+            <div class="input-group"><label>Current Tax Rate %</label><input type="number" id="conversionTaxRate" placeholder="24" value="24" oninput="debouncedConversion()"></div>
+            <div class="input-group"><label>Expected Retirement Tax Rate %</label><input type="number" id="retirementTaxRate" placeholder="22" value="22" oninput="debouncedConversion()"></div>
+            <div class="input-group"><label>Years Until Retirement</label><input type="number" id="yearsToRetirement" value="20" oninput="debouncedConversion()"></div>
+          </div>
+          <div style="background: white; padding: 20px; border-radius: var(--radius-md); margin-top: 20px; box-shadow: var(--shadow-xs);">
+            <h5 style="margin-bottom: 15px; font-weight: 700; color: var(--ink);">Conversion Analysis</h5>
+            <div class="dashboard" style="gap: 15px;">
+              <div style="text-align: center;"><div style="color: var(--muted); font-size: 0.85rem; margin-bottom: 5px;">Tax Due Now</div><div id="taxDueNow" style="font-size: 1.5rem; font-weight: 700; color: var(--danger); font-family: 'Roboto', sans-serif;">$0</div></div>
+              <div style="text-align: center;"><div style="color: var(--muted); font-size: 0.85rem; margin-bottom: 5px;">After-Tax Amount to Roth</div><div id="afterTaxAmount" style="font-size: 1.5rem; font-weight: 700; color: var(--primary); font-family: 'Roboto', sans-serif;">$0</div></div>
+              <div style="text-align: center;"><div style="color: var(--muted); font-size: 0.85rem; margin-bottom: 5px;">Potential Tax Savings</div><div id="taxSavings" style="font-size: 1.5rem; font-weight: 700; color: var(--success); font-family: 'Roboto', sans-serif;">$0</div></div>
+              <div style="text-align: center;"><div style="color: var(--muted); font-size: 0.85rem; margin-bottom: 5px;">Breakeven Time</div><div id="breakevenTime" style="font-size: 1.5rem; font-weight: 700; color: var(--ink); font-family: 'Roboto', sans-serif;">N/A</div></div>
+            </div>
+            <p style="margin-top: 15px; color: var(--muted); font-size: 0.9rem; padding: 12px; background: var(--grid); border-radius: 6px;"><strong style="color: var(--ink);">Strategy Note:</strong> <span id="conversionRecommendation">Enter conversion details to see analysis.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Social Security Planning -->
+  <div class="collapsible-section" id="social-security">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-hand-holding-dollar"></i> Social Security Planning</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div style="background: linear-gradient(135deg, rgba(147,197,253,0.1) 0%, rgba(96,165,250,0.08) 100%); padding: 25px; border-radius: var(--radius-md); border: 2px solid rgba(96,165,250,0.15);">
+          <h4 style="margin-bottom: 10px; font-family: 'Oswald', sans-serif; color: var(--primary); font-size: 1.25rem;"><i class="fas fa-calculator"></i> Benefit Calculator</h4>
+          <p style="color: var(--muted); margin-bottom: 20px; font-size: 0.95rem;">Estimate your Social Security benefits based on filing age. Delaying increases your monthly benefit significantly.</p>
+          <div class="profile-grid">
+            <div class="input-group"><label>Current Age</label><input type="number" id="ssCurrentAge" value="45" readonly style="background: var(--grid);"></div>
+            <div class="input-group"><label>Full Retirement Age (FRA)</label><input type="number" id="ssFRA" value="67" min="62" max="70" oninput="debouncedSS()"></div>
+            <div class="input-group"><label>Estimated Monthly Benefit at FRA</label><input type="number" id="ssMonthlyBenefit" placeholder="2500" value="0" oninput="debouncedSS()"></div>
+            <div class="input-group"><label>Planned Filing Age</label><input type="number" id="ssFilingAge" value="67" min="62" max="70" oninput="debouncedSS()"></div>
+          </div>
+          <div style="background: white; padding: 20px; border-radius: var(--radius-md); margin-top: 20px; box-shadow: var(--shadow-xs);">
+            <h5 style="margin-bottom: 15px; font-weight: 700; color: var(--ink);">Filing Age Analysis</h5>
+            <div id="ssBenefitBreakdown" style="display: grid; gap: 10px;"></div>
+            <div style="margin-top: 20px; padding: 15px; background: var(--grid); border-radius: 8px; border-left: 4px solid var(--primary);">
+              <h5 style="margin-bottom: 10px; font-weight: 700; color: var(--ink);"><i class="fas fa-lightbulb"></i> Recommendation</h5>
+              <p id="ssRecommendation" style="color: var(--muted); margin: 0;">Enter your Social Security details to see personalized recommendations.</p>
+            </div>
+          </div>
+          <div class="chart-container" style="margin-top: 20px;">
+            <h5 class="chart-title"><i class="fas fa-chart-line"></i> Monthly Benefit by Filing Age</h5>
+            <canvas id="socialSecurityChart" height="80"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Retirement Income Projections -->
+  <div class="collapsible-section" id="retirement-income">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-chart-line"></i> Retirement Income Projections</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div style="background: linear-gradient(135deg, rgba(147,197,253,0.1) 0%, rgba(96,165,250,0.08) 100%); padding: 30px; border-radius: var(--radius-md); border: 1px solid rgba(96,165,250,0.2); margin-bottom: 30px; box-shadow: 0 2px 15px rgba(96,165,250,0.08);">
+          <h4 style="margin-bottom: 25px; font-family: 'Oswald', sans-serif; color: var(--primary); font-size: 1.35rem; font-weight: 600;"><i class="fas fa-wallet"></i> Current Financial Situation</h4>
+          <div class="profile-grid">
+            <div class="input-group"><label><i class="fas fa-dollar-sign"></i> Current Annual Income</label><input type="number" id="currentIncome" placeholder="100000" value="0" step="1000" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Combined household income</small></div>
+            <div class="input-group"><label><i class="fas fa-shopping-cart"></i> Current Annual Expenses</label><input type="number" id="currentExpenses" placeholder="80000" value="0" step="1000" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Total yearly expenses</small></div>
+            <div class="input-group"><label><i class="fas fa-percentage"></i> Expected Expense Reduction in Retirement</label><input type="number" id="expenseReduction" placeholder="20" value="20" step="5" min="0" max="100" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Typical: 15-30%</small></div>
+            <div class="input-group"><label><i class="fas fa-calendar-alt"></i> Planned Retirement Age</label><input type="number" id="retirementAge" value="67" min="55" max="75" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">When you'll start drawing income</small></div>
+          </div>
+        </div>
+        <div style="background: white; padding: 25px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: 25px;">
+          <h4 style="margin-bottom: 20px; font-family: 'Oswald', sans-serif; color: var(--ink); font-size: 1.25rem;"><i class="fas fa-piggy-bank"></i> Retirement Income Sources</h4>
+          <div class="profile-grid" style="margin-bottom: 20px;">
+            <div class="input-group"><label><i class="fas fa-hand-holding-usd"></i> Client Social Security (Monthly)</label><input type="number" id="retirementClientSS" placeholder="2500" value="0" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Estimated monthly benefit</small></div>
+            <div class="input-group"><label><i class="fas fa-hand-holding-usd"></i> Spouse Social Security (Monthly)</label><input type="number" id="retirementSpouseSS" placeholder="2000" value="0" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Estimated monthly benefit</small></div>
+            <div class="input-group"><label><i class="fas fa-briefcase"></i> Pension Income (Monthly)</label><input type="number" id="pensionIncome" placeholder="0" value="0" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Company or government pension</small></div>
+            <div class="input-group"><label><i class="fas fa-home"></i> Rental Income (Monthly)</label><input type="number" id="rentalIncome" placeholder="0" value="0" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Net rental income</small></div>
+          </div>
+          <div style="background: var(--grid); padding: 20px; border-radius: var(--radius-md); margin-top: 20px;">
+            <h5 style="margin-bottom: 15px; font-weight: 700; color: var(--ink);"><i class="fas fa-calculator"></i> Portfolio Withdrawal Strategy</h5>
+            <div class="profile-grid">
+              <div class="input-group"><label>Withdrawal Rate from Retirement Assets</label><input type="number" id="withdrawalRate" value="4" min="1" max="10" step="0.5" oninput="debouncedRetirement()"><small style="color: var(--muted); margin-top: 5px; display: block;">Recommended: 3-5%</small></div>
+              <div class="input-group"><label>Total Retirement Assets Available</label><input type="number" id="totalRetirementAssets" value="0" readonly style="background: var(--grid); font-weight: 700; color: var(--primary);"><small style="color: var(--muted); margin-top: 5px; display: block;">Auto-calculated from accounts above</small></div>
+            </div>
+          </div>
+          <div id="retirementIncomeSummary" style="margin-top: 25px;"></div>
+        </div>
+        <!-- Debt Obligations -->
+        <div style="background: white; padding: 25px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: 25px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h4 style="font-family: 'Oswald', sans-serif; color: var(--ink); font-size: 1.25rem; margin: 0;"><i class="fas fa-credit-card"></i> Debt Obligations</h4>
+            <button onclick="addDebt()" class="btn btn-primary btn-small"><i class="fas fa-plus"></i> Add Debt</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table id="debtTable" style="width: 100%; border-collapse: collapse; background: white;">
+              <thead>
+                <tr style="background: var(--grid); border-bottom: 2px solid var(--line);">
+                  <th style="padding: 12px; text-align: left; font-weight: 700; color: var(--ink);">Type of Loan</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 700; color: var(--ink);">Monthly Payment (P&I)</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 700; color: var(--ink);">Remaining Balance</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 700; color: var(--ink);">Interest Rate %</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 700; color: var(--ink);">Months to Pay</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 700; color: var(--ink);">Payoff Date</th>
+                  <th style="padding: 12px; text-align: center; font-weight: 700; color: var(--ink);">Action</th>
+                </tr>
+              </thead>
+              <tbody id="debtTableBody"></tbody>
+              <tfoot>
+                <tr style="background: var(--grid); border-top: 3px solid var(--primary); font-weight: 700;">
+                  <td style="padding: 12px; color: var(--ink);">Total Monthly Debt:</td>
+                  <td style="padding: 12px; color: var(--primary); font-size: 1.1rem;" id="totalMonthlyDebt">$0</td>
+                  <td style="padding: 12px; color: var(--primary); font-size: 1.1rem;" id="totalDebtBalance">$0</td>
+                  <td colspan="4"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(239,68,68,0.05) 0%, rgba(239,68,68,0.02) 100%); border-radius: var(--radius-sm); border-left: 4px solid var(--danger);">
+            <p style="margin: 0; color: var(--muted); font-size: 0.95rem;"><i class="fas fa-info-circle"></i> <strong>Note:</strong> Debts paid off before or during retirement reduce your monthly income needs.</p>
+          </div>
+        </div>
+        <!-- Gap Analysis -->
+        <div style="background: linear-gradient(135deg, rgba(96,165,250,0.08) 0%, rgba(59,130,246,0.02) 100%); padding: 25px; border-radius: var(--radius-md); border: 2px solid rgba(96,165,250,0.15);">
+          <h4 style="margin-bottom: 20px; font-family: 'Oswald', sans-serif; color: var(--primary); font-size: 1.25rem;"><i class="fas fa-chart-bar"></i> Income Gap Analysis & Tax Planning</h4>
+          <div id="gapAnalysisResults"></div>
+          <div id="taxBracketAnalysis" style="margin-top: 25px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Employer Retirement Plan Details -->
+  <div class="collapsible-section" id="employer-plan">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-briefcase"></i> Employer Retirement Plan Details</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="profile-grid">
+          <div class="input-group"><label>Plan Type</label>
+            <select data-key="employerPlanType"><option value="">Select...</option><option value="401k">401(k)</option><option value="403b">403(b)</option><option value="457">457(b)</option><option value="tsp">TSP (Federal Employees)</option><option value="simple">SIMPLE IRA</option></select>
+          </div>
+          <div class="input-group"><label>Employer Match %</label><input type="number" data-key="employerMatch" placeholder="6" step="0.5" oninput="debouncedRecalc()"></div>
+          <div class="input-group"><label>Vesting Schedule</label><input type="text" data-key="vestingSchedule" placeholder="5 years"></div>
+          <div class="input-group"><label>Contribution Limit</label><input type="number" data-key="contributionLimit" placeholder="23000" step="1000"></div>
+        </div>
+        <div class="input-group" style="margin-top: 20px;"><label>Investment Options</label>
+          <textarea data-key="investmentOptions" rows="3" placeholder="List your available funds and expense ratios..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Insurance & Protection -->
+  <div class="collapsible-section" id="insurance">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-shield-halved"></i> Insurance & Protection</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <h4 style="margin-bottom: 15px; font-family: 'Oswald', sans-serif; color: var(--ink);"><i class="fas fa-file-shield"></i> Insurance Policies</h4>
+        <div class="table-container">
+          <table id="insuranceTable">
+            <thead><tr><th>Policy Type</th><th>Coverage Amount</th><th>Annual Premium</th><th>Carrier/Provider</th><th>Policy Number</th><th>Beneficiary</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr class="total-row"><td><strong>TOTAL</strong></td><td class="section-total" id="insuranceCoverageTotal">$0</td><td class="section-total" id="insurancePremiumTotal">$0</td><td colspan="5"></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="addRow('insuranceTable')"><i class="fas fa-plus"></i> Add Policy</button>
+        <div class="input-group" style="margin-top: 25px;"><label>General Insurance Notes</label>
+          <textarea data-key="insuranceNotes" rows="3" placeholder="General insurance information, agent contacts, review dates..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Estate Planning & Legal Documents -->
+  <div class="collapsible-section" id="estate-planning">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-file-contract"></i> Estate Planning & Legal Documents</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <h4 style="margin-bottom: 15px; font-family: 'Oswald', sans-serif; color: var(--ink);"><i class="fas fa-list-check"></i> Document Checklist</h4>
+        <div style="background: white; padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-xs);">
+          <div class="progress-item"><input type="checkbox" id="willCheck" data-key="hasWill" onchange="updateProgress()"><label for="willCheck">Last Will and Testament</label></div>
+          <div class="progress-item"><input type="checkbox" id="trustCheck" data-key="hasTrust" onchange="updateProgress()"><label for="trustCheck">Revocable Living Trust</label></div>
+          <div class="progress-item"><input type="checkbox" id="poaCheck" data-key="hasPOA" onchange="updateProgress()"><label for="poaCheck">Power of Attorney</label></div>
+          <div class="progress-item"><input type="checkbox" id="healthcareCheck" data-key="hasHealthcare" onchange="updateProgress()"><label for="healthcareCheck">Healthcare Directive / Living Will</label></div>
+          <div class="progress-item"><input type="checkbox" id="beneficiaryCheck" data-key="hasBeneficiary" onchange="updateProgress()"><label for="beneficiaryCheck">Beneficiary Designations Updated</label></div>
+        </div>
+        <div class="input-group" style="margin-top: 20px;"><label>Executor/Trustee Information</label>
+          <textarea data-key="executorInfo" rows="2" placeholder="Name and contact information..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+        <div class="input-group" style="margin-top: 15px;"><label>Estate Planning Notes</label>
+          <textarea data-key="estateNotes" rows="3" placeholder="Attorney contact, document locations, special instructions..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Additional Planning Information -->
+  <div class="collapsible-section" id="additional-info">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3><i class="fas fa-clipboard"></i> Additional Planning Information</h3>
+      <i class="fas fa-chevron-down collapsible-icon"></i>
+    </div>
+    <div class="collapsible-content">
+      <div class="collapsible-inner">
+        <div class="profile-grid">
+          <div class="input-group"><label>Healthcare Costs Estimate (Annual)</label><input type="number" data-key="healthcareCosts" placeholder="15000" step="1000"></div>
+          <div class="input-group"><label>Expected Inflation Rate %</label><input type="number" data-key="inflationRate" placeholder="3" value="3" step="0.1"></div>
+        </div>
+        <div class="input-group" style="margin-top: 20px;"><label>Retirement Lifestyle Goals</label>
+          <textarea data-key="lifestyleGoals" rows="3" placeholder="Travel, hobbies, location preferences..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+        <div class="input-group" style="margin-top: 15px;"><label>Other Income Sources</label>
+          <textarea data-key="otherIncome" rows="3" placeholder="Pension, rental income, part-time work..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+        <div class="input-group" style="margin-top: 15px;"><label>Special Considerations</label>
+          <textarea data-key="specialConsiderations" rows="3" placeholder="Supporting family members, charitable giving, business succession..." style="width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Charts Section -->
+  <section id="charts">
+    <h2 class="section-title" style="margin-top: 40px;"><i class="fas fa-chart-pie section-icon"></i> Financial Analysis</h2>
+    <div class="chart-container"><h3 class="chart-title"><i class="fas fa-chart-bar"></i> Asset Allocation</h3><canvas id="assetChart" height="80"></canvas></div>
+    <div class="chart-container"><h3 class="chart-title"><i class="fas fa-chart-line"></i> Portfolio Growth Projection</h3><canvas id="growthChart" height="80"></canvas></div>
+    <div class="chart-container"><h3 class="chart-title"><i class="fas fa-percent"></i> Tax Bracket Analysis</h3><canvas id="taxChart" height="80"></canvas></div>
+  </section>
+  <!-- Progress Tracker -->
+  <section id="progress">
+    <h2 class="section-title" style="margin-top: 40px;"><i class="fas fa-tasks section-icon"></i> Planning Progress</h2>
+    <div class="progress-section">
+      <div class="progress-item"><input type="checkbox" data-key="progress-1" onchange="updateProgress()"><label>Initial consultation completed</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-2" onchange="updateProgress()"><label>Financial data gathered and verified</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-3" onchange="updateProgress()"><label>Goals and objectives defined</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-4" onchange="updateProgress()"><label>Risk tolerance assessed</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-5" onchange="updateProgress()"><label>Tax strategy reviewed</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-6" onchange="updateProgress()"><label>Insurance needs analysis completed</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-7" onchange="updateProgress()"><label>Retirement income plan created</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-8" onchange="updateProgress()"><label>Estate planning documents reviewed</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-9" onchange="updateProgress()"><label>Investment recommendations presented</label></div>
+      <div class="progress-item"><input type="checkbox" data-key="progress-10" onchange="updateProgress()"><label>Action plan finalized and ready to implement</label></div>
+    </div>
+  </section>
+</div>
+<!-- Mobile Sticky Footer -->
+<div class="mobile-footer">
+  <div class="mobile-footer-actions">
+    <button class="mobile-footer-btn secondary" onclick="exportCSV()"><i class="fas fa-file-csv"></i> Export</button>
+    <button class="mobile-footer-btn primary" onclick="saveJSON()"><i class="fas fa-save"></i> Save</button>
+    <button class="mobile-footer-btn secondary" onclick="resetAll()"><i class="fas fa-redo"></i> Reset</button>
+  </div>
+</div>
+<!-- Scenario Management Modal -->
+<div id="scenarioModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2><i class="fas fa-folder-open"></i> Manage Scenarios</h2>
+      <button class="close-modal" onclick="document.getElementById('scenarioModal').style.display='none'"><i class="fas fa-times"></i></button>
+    </div>
+    <ul class="scenario-list" id="scenarioList"></ul>
+  </div>
+</div>
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadJSON(event)">
+<script>
+// Debounce utility for performance
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+const debouncedRecalc = debounce(recalc, 150);
+const debouncedConversion = debounce(calculateConversion, 150);
+const debouncedSS = debounce(calculateSocialSecurity, 150);
+const debouncedRetirement = debounce(calculateRetirementIncome, 150);
+
+// Mobile menu functionality
+const menuToggle = document.getElementById('menuToggle');
+const mobileDrawer = document.getElementById('mobileDrawer');
+const mobileOverlay = document.getElementById('mobileOverlay');
+
+menuToggle?.addEventListener('click', () => {
+  mobileDrawer.classList.toggle('open');
+  mobileOverlay.classList.toggle('active');
+  document.body.style.overflow = mobileDrawer.classList.contains('open') ? 'hidden' : '';
+});
+mobileOverlay?.addEventListener('click', () => {
+  mobileDrawer.classList.remove('open');
+  mobileOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+});
+mobileDrawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  mobileDrawer.classList.remove('open');
+  mobileOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}));
+
+function toggleCollapsible(header) {
+  header.classList.toggle('active');
+  header.nextElementSibling.classList.toggle('active');
+}
+
+// Global variables
+let modelApplied = false;
+let assetChart, growthChart, taxChart, socialSecurityChart;
+let scenarios = JSON.parse(localStorage.getItem('scenarios') || '{}');
+let currentScenario = 'default';
+
+function fmt(num) {
+  const n = parseFloat(num) || 0;
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+}
+function parseNum(val) {
+  if (typeof val === 'number') return val;
+  return parseFloat(String(val).replace(/[$,]/g, '')) || 0;
+}
+function formatCurrency(num) { return fmt(num); }
+function formatNumber(num) {
+  const n = parseFloat(num) || 0;
+  return n.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+}
+
+// Add row functionality
+function addRow(tableId) {
+  const tbody = document.getElementById(tableId).querySelector('tbody');
+  const row = tbody.insertRow();
+  if (tableId === 'taxDeferredTable') {
+    row.innerHTML = '<td><input type="text" placeholder="Account name" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="1000" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="7" step="0.1" min="0" max="20" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="500" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="500" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="500" oninput="debouncedRecalc()"></td><td class="currency-value">$0</td><td><input type="text" placeholder="Optional notes"></td><td><button class="btn btn-danger btn-small" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>';
+  } else if (tableId === 'taxFreeTable' || tableId === 'taxableTable') {
+    row.innerHTML = '<td><input type="text" placeholder="Account name" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="1000" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="7" step="0.1" min="0" max="20" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="500" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="500" oninput="debouncedRecalc()"></td><td class="currency-value">$0</td><td><input type="text" placeholder="Optional notes"></td><td><button class="btn btn-danger btn-small" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>';
+  } else if (tableId === 'cashTable') {
+    row.innerHTML = '<td><input type="text" placeholder="Account name" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="1000" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0.5" step="0.1" min="0" max="10" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="100" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="100" oninput="debouncedRecalc()"></td><td class="currency-value">$0</td><td><input type="text" placeholder="Optional notes"></td><td><button class="btn btn-danger btn-small" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>';
+  } else if (tableId === 'realEstateTable') {
+    row.innerHTML = '<td><input type="text" placeholder="Property name" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="10000" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="3" step="0.1" min="0" max="10" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="1000" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="1000" oninput="debouncedRecalc()"></td><td class="currency-value">$0</td><td><input type="text" placeholder="Optional notes"></td><td><button class="btn btn-danger btn-small" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>';
+  } else if (tableId === 'insuranceTable') {
+    row.innerHTML = '<td><select oninput="debouncedRecalc()" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;"><option value="">Select Type...</option><option value="term-life">Term Life</option><option value="whole-life">Whole Life</option><option value="universal-life">Universal Life</option><option value="iul">Indexed Universal Life (IUL)</option><option value="vul">Variable Universal Life</option><option value="disability">Disability Insurance</option><option value="ltc">Long-Term Care</option><option value="health">Health Insurance</option><option value="umbrella">Umbrella Policy</option><option value="auto">Auto Insurance</option><option value="home">Homeowners/Renters</option><option value="other">Other</option></select></td><td><input type="number" placeholder="0" step="10000" oninput="debouncedRecalc()"></td><td><input type="number" placeholder="0" step="100" oninput="debouncedRecalc()"></td><td><input type="text" placeholder="Carrier name"></td><td><input type="text" placeholder="Policy #"></td><td><input type="text" placeholder="Beneficiary"></td><td><input type="text" placeholder="Notes"></td><td><button class="btn btn-danger btn-small" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>';
+  }
+  recalc();
+}
+
+function deleteRow(btn) {
+  if (confirm('Delete this row?')) { btn.closest('tr').remove(); recalc(); }
+}
+// Main calculation function
+function recalc() {
+  const currentAge = parseNum(document.querySelector('[data-key="currentAge"]')?.value) || 45;
+  const retirementAge = parseNum(document.querySelector('[data-key="projectedAge"]')?.value) || 67;
+  const years = Math.max(0, retirementAge - currentAge);
+
+  // Tax-Deferred Accounts
+  let taxDeferredCurrent=0, taxDeferredContrib=0, taxDeferredMatch=0, taxDeferredWithdraw=0, taxDeferredFuture=0;
+  document.querySelectorAll('#taxDeferredTable tbody tr').forEach(row => {
+    const cells = row.cells;
+    const current = parseNum(cells[1].querySelector('input').value);
+    const rate = parseNum(cells[2].querySelector('input').value) / 100;
+    const contrib = parseNum(cells[3].querySelector('input').value);
+    const match = parseNum(cells[4].querySelector('input').value);
+    const withdraw = parseNum(cells[5].querySelector('input').value);
+    taxDeferredCurrent += current; taxDeferredContrib += contrib; taxDeferredMatch += match; taxDeferredWithdraw += withdraw;
+    const future = calculateFutureValue(current, rate, contrib + match - withdraw, years);
+    taxDeferredFuture += future;
+    cells[6].textContent = fmt(future);
+  });
+  document.getElementById('taxDeferredCurrentTotal').textContent = fmt(taxDeferredCurrent);
+  document.getElementById('taxDeferredContribTotal').textContent = fmt(taxDeferredContrib);
+  document.getElementById('taxDeferredMatchTotal').textContent = fmt(taxDeferredMatch);
+  document.getElementById('taxDeferredWithdrawTotal').textContent = fmt(taxDeferredWithdraw);
+  document.getElementById('taxDeferredFutureTotal').textContent = fmt(taxDeferredFuture);
+
+  // Tax-Free Accounts
+  let taxFreeCurrent=0, taxFreeContrib=0, taxFreeWithdraw=0, taxFreeFuture=0;
+  document.querySelectorAll('#taxFreeTable tbody tr').forEach(row => {
+    const cells = row.cells;
+    const current = parseNum(cells[1].querySelector('input').value);
+    const rate = parseNum(cells[2].querySelector('input').value) / 100;
+    const contrib = parseNum(cells[3].querySelector('input').value);
+    const withdraw = parseNum(cells[4].querySelector('input').value);
+    taxFreeCurrent += current; taxFreeContrib += contrib; taxFreeWithdraw += withdraw;
+    const future = calculateFutureValue(current, rate, contrib - withdraw, years);
+    taxFreeFuture += future;
+    cells[5].textContent = fmt(future);
+  });
+  document.getElementById('taxFreeCurrentTotal').textContent = fmt(taxFreeCurrent);
+  document.getElementById('taxFreeContribTotal').textContent = fmt(taxFreeContrib);
+  document.getElementById('taxFreeWithdrawTotal').textContent = fmt(taxFreeWithdraw);
+  document.getElementById('taxFreeFutureTotal').textContent = fmt(taxFreeFuture);
+
+  // Taxable Accounts
+  let taxableCurrent=0, taxableContrib=0, taxableWithdraw=0, taxableFuture=0;
+  document.querySelectorAll('#taxableTable tbody tr').forEach(row => {
+    const cells = row.cells;
+    const current = parseNum(cells[1].querySelector('input').value);
+    const rate = parseNum(cells[2].querySelector('input').value) / 100;
+    const contrib = parseNum(cells[3].querySelector('input').value);
+    const withdraw = parseNum(cells[4].querySelector('input').value);
+    taxableCurrent += current; taxableContrib += contrib; taxableWithdraw += withdraw;
+    const future = calculateFutureValue(current, rate, contrib - withdraw, years);
+    taxableFuture += future;
+    cells[5].textContent = fmt(future);
+  });
+  document.getElementById('taxableCurrentTotal').textContent = fmt(taxableCurrent);
+  document.getElementById('taxableContribTotal').textContent = fmt(taxableContrib);
+  document.getElementById('taxableWithdrawTotal').textContent = fmt(taxableWithdraw);
+  document.getElementById('taxableFutureTotal').textContent = fmt(taxableFuture);
+
+  // Cash Accounts
+  let cashCurrent=0, cashDeposit=0, cashWithdraw=0, cashFuture=0;
+  document.querySelectorAll('#cashTable tbody tr').forEach(row => {
+    const cells = row.cells;
+    const current = parseNum(cells[1].querySelector('input').value);
+    const rate = parseNum(cells[2].querySelector('input').value) / 100;
+    const deposit = parseNum(cells[3].querySelector('input').value);
+    const withdraw = parseNum(cells[4].querySelector('input').value);
+    cashCurrent += current; cashDeposit += deposit; cashWithdraw += withdraw;
+    const future = calculateFutureValueMonthly(current, rate/12, deposit - withdraw, years*12);
+    cashFuture += future;
+    cells[5].textContent = fmt(future);
+  });
+  document.getElementById('cashCurrentTotal').textContent = fmt(cashCurrent);
+  document.getElementById('cashDepositTotal').textContent = fmt(cashDeposit);
+  document.getElementById('cashWithdrawTotal').textContent = fmt(cashWithdraw);
+  document.getElementById('cashFutureTotal').textContent = fmt(cashFuture);
+
+  // Real Estate
+  let realEstateCurrent=0, realEstateIncome=0, realEstateExpense=0, realEstateFuture=0;
+  document.querySelectorAll('#realEstateTable tbody tr').forEach(row => {
+    const cells = row.cells;
+    const current = parseNum(cells[1].querySelector('input').value);
+    const rate = parseNum(cells[2].querySelector('input').value) / 100;
+    const income = parseNum(cells[3].querySelector('input').value);
+    const expense = parseNum(cells[4].querySelector('input').value);
+    realEstateCurrent += current; realEstateIncome += income; realEstateExpense += expense;
+    const future = calculateFutureValue(current, rate, income - expense, years);
+    realEstateFuture += future;
+    cells[5].textContent = fmt(future);
+  });
+  document.getElementById('realEstateCurrentTotal').textContent = fmt(realEstateCurrent);
+  document.getElementById('realEstateIncomeTotal').textContent = fmt(realEstateIncome);
+  document.getElementById('realEstateExpenseTotal').textContent = fmt(realEstateExpense);
+  document.getElementById('realEstateFutureTotal').textContent = fmt(realEstateFuture);
+
+  // Insurance
+  let insuranceCoverage=0, insurancePremium=0;
+  document.querySelectorAll('#insuranceTable tbody tr').forEach(row => {
+    const cells = row.cells;
+    insuranceCoverage += parseNum(cells[1].querySelector('input').value);
+    insurancePremium += parseNum(cells[2].querySelector('input').value);
+  });
+  document.getElementById('insuranceCoverageTotal').textContent = fmt(insuranceCoverage);
+  document.getElementById('insurancePremiumTotal').textContent = fmt(insurancePremium);
+
+  // Dashboard
+  document.getElementById('dashTaxDeferred').textContent = fmt(taxDeferredFuture);
+  document.getElementById('dashTaxFree').textContent = fmt(taxFreeFuture);
+  document.getElementById('dashTaxable').textContent = fmt(taxableFuture);
+  document.getElementById('dashCash').textContent = fmt(cashFuture);
+  document.getElementById('dashRealEstate').textContent = fmt(realEstateFuture);
+  document.getElementById('dashTotal').textContent = fmt(taxDeferredFuture + taxFreeFuture + taxableFuture + cashFuture + realEstateFuture);
+
+  updateCharts(taxDeferredCurrent, taxFreeCurrent, taxableCurrent, cashCurrent, realEstateCurrent,
+               taxDeferredFuture, taxFreeFuture, taxableFuture, cashFuture, realEstateFuture);
+  autoSaveToLocalStorage();
+}
+
+function calculateFutureValue(pv, rate, pmt, years) {
+  if (rate === 0) return pv + (pmt * years);
+  return Math.max(0, pv * Math.pow(1 + rate, years) + pmt * ((Math.pow(1 + rate, years) - 1) / rate));
+}
+function calculateFutureValueMonthly(pv, monthlyRate, monthlyPmt, months) {
+  if (monthlyRate === 0) return pv + (monthlyPmt * months);
+  return Math.max(0, pv * Math.pow(1 + monthlyRate, months) + monthlyPmt * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate));
+}
+// Charts - FIX: growth chart now uses CURRENT values, not future values
+function initCharts() {
+  const colors = { primary:'#60a5fa', secondary:'#3b82f6', success:'#10b981', warning:'#f59e0b', danger:'#ef4444', purple:'#8b5cf6' };
+  const tooltipStyle = { backgroundColor:'rgba(255,255,255,0.95)', titleColor:'#0f172a', bodyColor:'#0f172a', borderColor:'#cbd5e1', borderWidth:1, padding:12 };
+
+  assetChart = new Chart(document.getElementById('assetChart').getContext('2d'), {
+    type: 'doughnut',
+    data: { labels:['Tax-Deferred','Tax-Free','Taxable','Cash','Real Estate'], datasets:[{ data:[0,0,0,0,0], backgroundColor:[colors.primary,colors.success,colors.secondary,colors.warning,colors.purple], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:true, plugins:{ legend:{ position:'bottom', labels:{ font:{size:13,family:'Inter'}, padding:15 } }, tooltip:{ ...tooltipStyle, callbacks:{ label:ctx=>ctx.label+': '+fmt(ctx.raw) } } } }
+  });
+
+  growthChart = new Chart(document.getElementById('growthChart').getContext('2d'), {
+    type: 'line',
+    data: { labels:[], datasets:[{ label:'Projected Portfolio Value', data:[], borderColor:colors.primary, backgroundColor:'rgba(37,99,235,0.1)', borderWidth:3, fill:true, tension:0.4 }] },
+    options: { responsive:true, maintainAspectRatio:true, plugins:{ legend:{ display:true, labels:{font:{size:13,family:'Inter'}} }, tooltip:{ ...tooltipStyle, callbacks:{ label:ctx=>'Value: '+fmt(ctx.raw) } } }, scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v), font:{size:11,family:'Roboto'} }, grid:{color:'rgba(0,0,0,0.05)'} }, x:{ ticks:{font:{size:11,family:'Inter'}}, grid:{display:false} } } }
+  });
+
+  taxChart = new Chart(document.getElementById('taxChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels:['Current Income','Retirement Income'], datasets:[{ label:'Tax Liability', data:[0,0], backgroundColor:[colors.danger,colors.success], borderRadius:8, borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:true, plugins:{ legend:{display:false}, tooltip:{ ...tooltipStyle, callbacks:{ label:ctx=>'Tax: '+fmt(ctx.raw) } } }, scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v), font:{size:11,family:'Roboto'} }, grid:{color:'rgba(0,0,0,0.05)'} }, x:{ ticks:{font:{size:11,family:'Inter'}}, grid:{display:false} } } }
+  });
+
+  socialSecurityChart = new Chart(document.getElementById('socialSecurityChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels:['62','63','64','65','66','67','68','69','70'], datasets:[{ label:'Monthly Benefit', data:[0,0,0,0,0,0,0,0,0], backgroundColor:colors.primary, borderRadius:8, borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:true, plugins:{ legend:{display:false}, tooltip:{ ...tooltipStyle, callbacks:{ label:ctx=>'Monthly: '+fmt(ctx.raw) } } }, scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v), font:{size:11,family:'Roboto'} }, grid:{color:'rgba(0,0,0,0.05)'} }, x:{ title:{display:true,text:'Claiming Age',font:{size:12,family:'Inter',weight:'bold'}}, ticks:{font:{size:11,family:'Inter'}}, grid:{display:false} } } }
+  });
+}
+
+// FIX: updateCharts now receives both current and future values
+// Growth chart projects from CURRENT values (not future) to avoid double-counting
+function updateCharts(tdCurr, tfCurr, txCurr, caCurr, reCurr, tdFut, tfFut, txFut, caFut, reFut) {
+  assetChart.data.datasets[0].data = [tdFut, tfFut, txFut, caFut, reFut];
+  assetChart.update();
+
+  const currentAge = parseNum(document.querySelector('[data-key="currentAge"]')?.value) || 45;
+  const retirementAge = parseNum(document.querySelector('[data-key="projectedAge"]')?.value) || 67;
+  const years = Math.max(0, retirementAge - currentAge);
+  const totalCurrent = tdCurr + tfCurr + txCurr + caCurr + reCurr;
+  const totalFuture = tdFut + tfFut + txFut + caFut + reFut;
+
+  const labels = [], data = [];
+  for (let i = 0; i <= years; i++) {
+    labels.push((currentAge + i).toString());
+    // Linear interpolation between current and calculated future value
+    const progress = years > 0 ? i / years : 1;
+    data.push(totalCurrent + (totalFuture - totalCurrent) * progress);
+  }
+  growthChart.data.labels = labels;
+  growthChart.data.datasets[0].data = data;
+  growthChart.update();
+
+  calculateTaxBracket();
+  calculateSocialSecurity();
+}
+function calculateTaxBracket() {
+  const income = parseNum(document.querySelector('[data-key="clientIncome"]')?.value) || 0;
+  const spouseIncome = parseNum(document.querySelector('[data-key="spouseIncome"]')?.value) || 0;
+  const totalIncome = income + spouseIncome;
+  const filingStatus = document.querySelector('[data-key="filingStatus"]')?.value || 'married-joint';
+  const brackets = {
+    'married-joint': [{rate:0.10,min:0,max:22000},{rate:0.12,min:22000,max:89075},{rate:0.22,min:89075,max:190750},{rate:0.24,min:190750,max:364200},{rate:0.32,min:364200,max:462500},{rate:0.35,min:462500,max:693750},{rate:0.37,min:693750,max:Infinity}],
+    'single': [{rate:0.10,min:0,max:11000},{rate:0.12,min:11000,max:44725},{rate:0.22,min:44725,max:95375},{rate:0.24,min:95375,max:182100},{rate:0.32,min:182100,max:231250},{rate:0.35,min:231250,max:578125},{rate:0.37,min:578125,max:Infinity}]
+  };
+  const relevantBrackets = brackets[filingStatus] || brackets['single'];
+  let currentTax = 0, currentBracket = null;
+  relevantBrackets.forEach(b => {
+    if (totalIncome > b.min) {
+      currentTax += (Math.min(totalIncome, b.max) - b.min) * b.rate;
+      if (totalIncome >= b.min && totalIncome <= b.max) currentBracket = b;
+    }
+  });
+  if (currentBracket) {
+    document.getElementById('currentTaxRate').value = (currentBracket.rate * 100) + '%';
+    document.getElementById('currentTaxRange').value = fmt(currentBracket.min) + ' - ' + (currentBracket.max === Infinity ? '\u221E' : fmt(currentBracket.max));
+    document.getElementById('taxPosition').value = fmt(totalIncome);
+  }
+  const bracketBody = document.querySelector('#bracketTable tbody');
+  bracketBody.innerHTML = '';
+  relevantBrackets.forEach(b => {
+    const row = bracketBody.insertRow();
+    const isCurrent = currentBracket && b.rate === currentBracket.rate;
+    if (isCurrent) { row.style.background = '#f59e0b'; row.style.color = 'white'; row.style.fontWeight = '700'; }
+    row.innerHTML = '<td>'+(b.rate*100)+'%</td><td>'+fmt(b.min)+' - '+(b.max===Infinity?'\u221E':fmt(b.max))+'</td><td>'+(isCurrent?'\u2190 You are here':'')+'</td>';
+  });
+  const retirementIncome = totalIncome * 0.7;
+  let retirementTax = 0;
+  relevantBrackets.forEach(b => { if (retirementIncome > b.min) retirementTax += (Math.min(retirementIncome, b.max) - b.min) * b.rate; });
+  taxChart.data.datasets[0].data = [currentTax, retirementTax];
+  taxChart.update();
+}
+
+function calculateConversion() {
+  const amt = parseNum(document.getElementById('conversionAmount')?.value) || 0;
+  const curRate = parseNum(document.getElementById('conversionTaxRate')?.value) / 100 || 0.24;
+  const retRate = parseNum(document.getElementById('retirementTaxRate')?.value) / 100 || 0.22;
+  const yrs = parseNum(document.getElementById('yearsToRetirement')?.value) || 20;
+  if (amt === 0) {
+    document.getElementById('taxDueNow').textContent = '$0';
+    document.getElementById('afterTaxAmount').textContent = '$0';
+    document.getElementById('taxSavings').textContent = '$0';
+    document.getElementById('breakevenTime').textContent = 'N/A';
+    document.getElementById('conversionRecommendation').textContent = 'Enter conversion details to see analysis.';
+    return;
+  }
+  const taxNow = amt * curRate;
+  const afterTax = amt - taxNow;
+  const taxIfWait = amt * retRate;
+  const savings = taxIfWait - taxNow;
+  let breakevenYears = 'N/A';
+  if (curRate < retRate) {
+    for (let y = 1; y <= 40; y++) {
+      if (afterTax * Math.pow(1.07, y) > amt * Math.pow(1.07, y) * (1 - retRate)) { breakevenYears = y + ' years'; break; }
+    }
+  }
+  document.getElementById('taxDueNow').textContent = fmt(taxNow);
+  document.getElementById('afterTaxAmount').textContent = fmt(afterTax);
+  document.getElementById('taxSavings').textContent = fmt(Math.abs(savings));
+  document.getElementById('breakevenTime').textContent = breakevenYears;
+  let rec = '';
+  if (curRate < retRate) rec = 'Converting now could save you money since your current tax rate ('+(curRate*100)+'%) is lower than your expected retirement rate ('+(retRate*100)+'%). Consider converting to take advantage of today\'s lower rates.';
+  else if (curRate > retRate) rec = 'Your current tax rate ('+(curRate*100)+'%) is higher than your expected retirement rate ('+(retRate*100)+'%). It may be better to wait and pay taxes at the lower rate in retirement.';
+  else rec = 'Your current and expected retirement tax rates are the same ('+(curRate*100)+'%). Other factors like tax diversification and RMD avoidance may still make conversion worthwhile.';
+  document.getElementById('conversionRecommendation').textContent = rec;
+}
+
+function calculateSocialSecurity() {
+  const monthlyBenefit = parseNum(document.getElementById('ssMonthlyBenefit')?.value) || 0;
+  const fra = parseNum(document.getElementById('ssFRA')?.value) || 67;
+  const filingAge = parseNum(document.getElementById('ssFilingAge')?.value) || 67;
+  const currentAge = parseNum(document.querySelector('[data-key="currentAge"]')?.value) || 45;
+  document.getElementById('ssCurrentAge').value = currentAge;
+  if (monthlyBenefit === 0) {
+    document.getElementById('ssBenefitBreakdown').innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">Enter your estimated monthly benefit at FRA to see analysis.</p>';
+    document.getElementById('ssRecommendation').textContent = 'Enter your Social Security details to see personalized recommendations.';
+    return;
+  }
+  const ages = [62,63,64,65,66,67,68,69,70];
+  const benefits = ages.map(age => {
+    let adj = 0;
+    if (age < fra) adj = -(fra - age) * 12 * 0.00555;
+    else if (age > fra) adj = (age - fra) * 12 * 0.00667;
+    return monthlyBenefit * (1 + adj);
+  });
+  document.getElementById('ssBenefitBreakdown').innerHTML = ages.map((age, i) => {
+    const b = benefits[i], ann = b * 12, sel = age === filingAge;
+    const style = sel ? 'background:var(--primary);color:white;font-weight:700;' : 'background:var(--grid);';
+    const badge = sel ? '<span style="margin-left:10px;background:white;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:0.8rem;font-weight:700;">Selected</span>' : '';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 15px;'+style+'border-radius:8px;margin-bottom:8px;"><div style="font-weight:600;">Age '+age+':</div><div style="display:flex;align-items:center;gap:15px;"><div>'+fmt(b)+'/mo ('+fmt(ann)+'/yr)'+badge+'</div></div></div>';
+  }).join('');
+  socialSecurityChart.data.datasets[0].data = benefits;
+  socialSecurityChart.update();
+  let rec = '';
+  if (filingAge === 62) rec = 'Filing at 62 gives you immediate income but results in a permanently reduced benefit. This makes sense if you need the income now or have health concerns.';
+  else if (filingAge === fra) rec = 'Filing at your Full Retirement Age ('+fra+') gives you your full benefit. This is a balanced approach.';
+  else if (filingAge === 70) rec = 'Filing at 70 maximizes your monthly benefit with an increase of about 8% per year after FRA. Great if you have other income sources.';
+  else if (filingAge < fra) { const red = ((fra - filingAge) * 5.55).toFixed(1); rec = 'Filing at age '+filingAge+' results in approximately a '+red+'% reduction from your FRA benefit. Consider delaying if possible.'; }
+  else { const inc = ((filingAge - fra) * 8).toFixed(1); rec = 'Delaying to age '+filingAge+' increases your benefit by approximately '+inc+'% compared to filing at FRA.'; }
+  document.getElementById('ssRecommendation').textContent = rec;
+}
+
+function updateProgress() {
+  document.querySelectorAll('.progress-item input[type="checkbox"]').forEach(cb => {
+    cb.closest('.progress-item').classList.toggle('completed', cb.checked);
+  });
+}
+// FIX: Data persistence - use consistent key 'lifecycleData'
+function autoSaveToLocalStorage() {
+  const data = collectAllData();
+  localStorage.setItem('lifecycleData', JSON.stringify(data));
+  scenarios[currentScenario] = data;
+  localStorage.setItem('scenarios', JSON.stringify(scenarios));
+  showSaveIndicator('Auto-saved', true);
+}
+
+function showSaveIndicator(text, isAutoSave) {
+  const indicator = document.getElementById('saveIndicator');
+  document.getElementById('saveText').textContent = text;
+  indicator.classList.toggle('saving', isAutoSave);
+  indicator.classList.add('visible');
+  setTimeout(() => indicator.classList.remove('visible'), 2000);
+}
+
+function collectAllData() {
+  const data = { modelApplied: modelApplied, profile: {} };
+  document.querySelectorAll('[data-key]').forEach(el => {
+    data.profile[el.dataset.key] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  data.taxDeferredAccounts = [];
+  document.querySelectorAll('#taxDeferredTable tbody tr').forEach(row => {
+    const c = row.cells;
+    data.taxDeferredAccounts.push({ desc:c[0].querySelector('input').value, current:c[1].querySelector('input').value, rate:c[2].querySelector('input').value, contrib:c[3].querySelector('input').value, match:c[4].querySelector('input').value, withdraw:c[5].querySelector('input').value, notes:c[7].querySelector('input').value });
+  });
+  data.taxFreeAccounts = [];
+  document.querySelectorAll('#taxFreeTable tbody tr').forEach(row => {
+    const c = row.cells;
+    data.taxFreeAccounts.push({ desc:c[0].querySelector('input').value, current:c[1].querySelector('input').value, rate:c[2].querySelector('input').value, contrib:c[3].querySelector('input').value, withdraw:c[4].querySelector('input').value, notes:c[6].querySelector('input').value });
+  });
+  data.taxableAccounts = [];
+  document.querySelectorAll('#taxableTable tbody tr').forEach(row => {
+    const c = row.cells;
+    data.taxableAccounts.push({ desc:c[0].querySelector('input').value, current:c[1].querySelector('input').value, rate:c[2].querySelector('input').value, contrib:c[3].querySelector('input').value, withdraw:c[4].querySelector('input').value, notes:c[6].querySelector('input').value });
+  });
+  data.cashAccounts = [];
+  document.querySelectorAll('#cashTable tbody tr').forEach(row => {
+    const c = row.cells;
+    data.cashAccounts.push({ desc:c[0].querySelector('input').value, current:c[1].querySelector('input').value, rate:c[2].querySelector('input').value, deposit:c[3].querySelector('input').value, withdraw:c[4].querySelector('input').value, notes:c[6].querySelector('input').value });
+  });
+  data.realEstateAssets = [];
+  document.querySelectorAll('#realEstateTable tbody tr').forEach(row => {
+    const c = row.cells;
+    data.realEstateAssets.push({ property:c[0].querySelector('input').value, current:c[1].querySelector('input').value, rate:c[2].querySelector('input').value, income:c[3].querySelector('input').value, expense:c[4].querySelector('input').value, notes:c[6].querySelector('input').value });
+  });
+  data.insurancePolicies = [];
+  document.querySelectorAll('#insuranceTable tbody tr').forEach(row => {
+    const c = row.cells;
+    data.insurancePolicies.push({ policyType:c[0].querySelector('select').value, coverage:c[1].querySelector('input').value, premium:c[2].querySelector('input').value, carrier:c[3].querySelector('input').value, policyNumber:c[4].querySelector('input').value, beneficiary:c[5].querySelector('input').value, notes:c[6].querySelector('input').value });
+  });
+  // FIX: Also save debt data
+  data.debts = [];
+  document.querySelectorAll('.debt-row').forEach(row => {
+    data.debts.push({ type:row.querySelector('.debt-type').value, payment:row.querySelector('.debt-payment').value, balance:row.querySelector('.debt-balance').value, rate:row.querySelector('.debt-rate').value });
+  });
+  return data;
+}
+
+function loadAllData(data) {
+  for (let key in data.profile) {
+    const el = document.querySelector('[data-key="'+key+'"]');
+    if (el) { if (el.type === 'checkbox') el.checked = data.profile[key]; else el.value = data.profile[key]; }
+  }
+  const tables = { taxDeferredTable:data.taxDeferredAccounts||[], taxFreeTable:data.taxFreeAccounts||[], taxableTable:data.taxableAccounts||[], cashTable:data.cashAccounts||[], realEstateTable:data.realEstateAssets||[], insuranceTable:data.insurancePolicies||[] };
+  for (let tableId in tables) {
+    const tbody = document.getElementById(tableId).querySelector('tbody');
+    tbody.innerHTML = '';
+    tables[tableId].forEach(rowData => {
+      addRow(tableId);
+      const row = tbody.rows[tbody.rows.length - 1];
+      const inputs = row.querySelectorAll('input');
+      const selects = row.querySelectorAll('select');
+      if (tableId === 'taxDeferredTable') { inputs[0].value=rowData.desc||''; inputs[1].value=rowData.current||''; inputs[2].value=rowData.rate||''; inputs[3].value=rowData.contrib||''; inputs[4].value=rowData.match||''; inputs[5].value=rowData.withdraw||''; inputs[6].value=rowData.notes||''; }
+      else if (tableId === 'taxFreeTable' || tableId === 'taxableTable') { inputs[0].value=rowData.desc||''; inputs[1].value=rowData.current||''; inputs[2].value=rowData.rate||''; inputs[3].value=rowData.contrib||''; inputs[4].value=rowData.withdraw||''; inputs[5].value=rowData.notes||''; }
+      else if (tableId === 'cashTable') { inputs[0].value=rowData.desc||''; inputs[1].value=rowData.current||''; inputs[2].value=rowData.rate||''; inputs[3].value=rowData.deposit||''; inputs[4].value=rowData.withdraw||''; inputs[5].value=rowData.notes||''; }
+      else if (tableId === 'realEstateTable') { inputs[0].value=rowData.property||''; inputs[1].value=rowData.current||''; inputs[2].value=rowData.rate||''; inputs[3].value=rowData.income||''; inputs[4].value=rowData.expense||''; inputs[5].value=rowData.notes||''; }
+      else if (tableId === 'insuranceTable') { selects[0].value=rowData.policyType||''; inputs[0].value=rowData.coverage||''; inputs[1].value=rowData.premium||''; inputs[2].value=rowData.carrier||''; inputs[3].value=rowData.policyNumber||''; inputs[4].value=rowData.beneficiary||''; inputs[5].value=rowData.notes||''; }
+    });
+  }
+  // FIX: Load debts properly
+  if (data.debts) {
+    document.getElementById('debtTableBody').innerHTML = '';
+    debtCounter = 0;
+    data.debts.forEach(d => {
+      addDebt();
+      const row = document.getElementById('debt-'+debtCounter);
+      if (row) { row.querySelector('.debt-type').value=d.type||''; row.querySelector('.debt-payment').value=d.payment||''; row.querySelector('.debt-balance').value=d.balance||''; row.querySelector('.debt-rate').value=d.rate||''; calculateDebtPayoff(debtCounter); }
+    });
+    calculateDebtTotals();
+  }
+  modelApplied = !!data.modelApplied;
+  recalc();
+  calculateTaxBracket();
+  calculateSocialSecurity();
+  updateProgress();
+}
+// Scenario Management
+function saveCurrentScenario() {
+  const name = prompt('Enter a name for this scenario:');
+  if (!name) return;
+  const data = collectAllData();
+  const id = Date.now().toString();
+  scenarios[id] = { ...data, name:name, timestamp:new Date().toISOString() };
+  localStorage.setItem('scenarios', JSON.stringify(scenarios));
+  updateScenarioDropdown();
+  updateScenarioList();
+  showSaveIndicator('Scenario saved: '+name, false);
+}
+function switchScenario(id) {
+  if (!scenarios[id]) return;
+  currentScenario = id;
+  loadAllData(scenarios[id]);
+  showSaveIndicator('Loaded: '+(scenarios[id].name||'Scenario'), false);
+}
+function updateScenarioDropdown() {
+  const sel = document.getElementById('scenarioSelect');
+  sel.innerHTML = '<option value="default">Default Scenario</option>';
+  for (let id in scenarios) { if (id==='default') continue; const o=document.createElement('option'); o.value=id; o.textContent=scenarios[id].name||'Unnamed'; sel.appendChild(o); }
+  sel.value = currentScenario;
+}
+function updateScenarioList() {
+  const list = document.getElementById('scenarioList');
+  list.innerHTML = '';
+  for (let id in scenarios) {
+    if (id==='default') continue;
+    const s = scenarios[id], li = document.createElement('li');
+    li.className = 'scenario-item';
+    li.innerHTML = '<div class="scenario-item-info"><div class="scenario-item-name">'+(s.name||'Unnamed')+'</div><div class="scenario-item-date">Saved: '+(s.timestamp?new Date(s.timestamp).toLocaleDateString():'Unknown')+'</div></div><div class="scenario-item-actions"><button class="scenario-btn" onclick="switchScenario(\''+id+'\');document.getElementById(\'scenarioModal\').style.display=\'none\';">Load</button><button class="scenario-btn delete" onclick="deleteScenario(\''+id+'\')">Delete</button></div>';
+    list.appendChild(li);
+  }
+}
+function deleteScenario(id) {
+  if (!confirm('Delete this scenario?')) return;
+  delete scenarios[id];
+  localStorage.setItem('scenarios', JSON.stringify(scenarios));
+  updateScenarioDropdown(); updateScenarioList();
+  if (currentScenario === id) { currentScenario = 'default'; resetAll(); }
+}
+
+// Export/Import
+function exportCSV() {
+  const data = collectAllData();
+  let csv = 'Section,Description,Current,Rate,Contribution,Withdrawal,Future,Notes\n';
+  (data.taxDeferredAccounts||[]).forEach(a => { csv += 'Tax-Deferred,'+a.desc+','+a.current+','+a.rate+','+a.contrib+','+a.withdraw+',,'+a.notes+'\n'; });
+  (data.taxFreeAccounts||[]).forEach(a => { csv += 'Tax-Free,'+a.desc+','+a.current+','+a.rate+','+a.contrib+','+a.withdraw+',,'+a.notes+'\n'; });
+  (data.taxableAccounts||[]).forEach(a => { csv += 'Taxable,'+a.desc+','+a.current+','+a.rate+','+a.contrib+','+a.withdraw+',,'+a.notes+'\n'; });
+  (data.cashAccounts||[]).forEach(a => { csv += 'Cash,'+a.desc+','+a.current+','+a.rate+','+a.deposit+','+a.withdraw+',,'+a.notes+'\n'; });
+  (data.realEstateAssets||[]).forEach(a => { csv += 'Real Estate,'+a.property+','+a.current+','+a.rate+','+a.income+','+a.expense+',,'+a.notes+'\n'; });
+  csv += '\nInsurance Policies\nPolicy Type,Coverage Amount,Annual Premium,Carrier,Policy Number,Beneficiary,Notes\n';
+  (data.insurancePolicies||[]).forEach(p => { csv += p.policyType+','+p.coverage+','+p.premium+','+p.carrier+','+p.policyNumber+','+p.beneficiary+','+p.notes+'\n'; });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'financial_plan_'+new Date().toISOString().split('T')[0]+'.csv'; a.click();
+  showSaveIndicator('CSV exported', false);
+}
+function saveJSON() {
+  const data = collectAllData();
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
+  a.download = 'financial_plan_'+new Date().toISOString().split('T')[0]+'.json'; a.click();
+  showSaveIndicator('File downloaded', false);
+}
+function loadJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { loadAllData(JSON.parse(e.target.result)); showSaveIndicator('File loaded', false); };
+  reader.readAsText(file);
+}
+function resetAll() {
+  if (!confirm('Are you sure you want to reset all data? This cannot be undone.')) return;
+  document.querySelectorAll('[data-key]').forEach(el => { if (el.type==='checkbox') el.checked=false; else el.value=''; });
+  document.querySelector('[data-key="currentAge"]').value = '45';
+  document.querySelector('[data-key="projectedAge"]').value = '67';
+  document.querySelector('[data-key="filingStatus"]').value = 'married-joint';
+  document.querySelector('[data-key="inflationRate"]').value = '3';
+  document.querySelector('[data-key="fullRetirementAge"]').value = '67';
+  document.querySelector('[data-key="spouseFullRetirementAge"]').value = '67';
+  ['taxDeferredTable','taxFreeTable','taxableTable','cashTable','realEstateTable','insuranceTable'].forEach(id => { document.getElementById(id).querySelector('tbody').innerHTML = ''; });
+  document.getElementById('debtTableBody').innerHTML = '';
+  modelApplied = false;
+  recalc(); calculateTaxBracket(); calculateSocialSecurity(); updateProgress();
+  showSaveIndicator('All data reset', false);
+}
+// Debt Management - FIX: debt loading ID bug fixed
+let debtCounter = 0;
+
+function addDebt() {
+  debtCounter++;
+  const tbody = document.getElementById('debtTableBody');
+  const row = document.createElement('tr');
+  row.id = 'debt-'+debtCounter;
+  row.className = 'debt-row';
+  row.style.borderBottom = '1px solid var(--line)';
+  row.innerHTML = '<td style="padding:12px;"><input type="text" class="debt-input debt-type" data-debt-id="'+debtCounter+'" placeholder="Mortgage, Car, Student..." style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;" onchange="saveDebtData()"></td><td style="padding:12px;"><input type="number" class="debt-input debt-payment" data-debt-id="'+debtCounter+'" placeholder="2000" step="10" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;" oninput="calculateDebtTotals();saveDebtData()"></td><td style="padding:12px;"><input type="number" class="debt-input debt-balance" data-debt-id="'+debtCounter+'" placeholder="250000" step="1000" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;" oninput="calculateDebtPayoff('+debtCounter+');saveDebtData()"></td><td style="padding:12px;"><input type="number" class="debt-input debt-rate" data-debt-id="'+debtCounter+'" placeholder="3.5" step="0.1" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;" oninput="calculateDebtPayoff('+debtCounter+');saveDebtData()"></td><td style="padding:12px;"><input type="number" class="debt-input debt-months" data-debt-id="'+debtCounter+'" placeholder="360" readonly style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--grid);font-weight:600;"></td><td style="padding:12px;"><span class="debt-payoff-date" data-debt-id="'+debtCounter+'" style="font-weight:600;color:var(--muted);">-</span></td><td style="padding:12px;text-align:center;"><button onclick="removeDebt('+debtCounter+')" style="padding:6px 12px;background:var(--danger);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;"><i class="fas fa-trash"></i></button></td>';
+  tbody.appendChild(row);
+  calculateDebtTotals();
+}
+
+function removeDebt(id) {
+  const row = document.getElementById('debt-'+id);
+  if (row) { row.remove(); calculateDebtTotals(); saveDebtData(); calculateRetirementIncome(); }
+}
+
+function calculateDebtPayoff(id) {
+  const row = document.getElementById('debt-'+id);
+  if (!row) return;
+  const payment = parseFloat(row.querySelector('.debt-payment').value) || 0;
+  const balance = parseFloat(row.querySelector('.debt-balance').value) || 0;
+  const rate = parseFloat(row.querySelector('.debt-rate').value) || 0;
+  if (payment > 0 && balance > 0 && rate >= 0) {
+    const mr = rate / 100 / 12;
+    const months = rate === 0 ? Math.ceil(balance / payment) : Math.ceil(Math.log(payment / (payment - balance * mr)) / Math.log(1 + mr));
+    row.querySelector('.debt-months').value = months;
+    const d = new Date(); d.setMonth(d.getMonth() + months);
+    row.querySelector('.debt-payoff-date').textContent = d.toLocaleDateString('en-US', {month:'short',year:'numeric'});
+  } else {
+    row.querySelector('.debt-months').value = '';
+    row.querySelector('.debt-payoff-date').textContent = '-';
+  }
+}
+
+function calculateDebtTotals() {
+  let totalMonthly = 0, totalBalance = 0;
+  document.querySelectorAll('.debt-row').forEach(row => {
+    totalMonthly += parseFloat(row.querySelector('.debt-payment').value) || 0;
+    totalBalance += parseFloat(row.querySelector('.debt-balance').value) || 0;
+  });
+  document.getElementById('totalMonthlyDebt').textContent = fmt(totalMonthly);
+  document.getElementById('totalDebtBalance').textContent = fmt(totalBalance);
+  calculateRetirementIncome();
+}
+
+function saveDebtData() {
+  // Debts are now saved as part of collectAllData/autoSaveToLocalStorage
+  autoSaveToLocalStorage();
+}
+// FIX: Retirement calc - use cell index instead of broken placeholder selector
+function calculateRetirementIncome() {
+  const currentIncome = parseFloat(document.getElementById('currentIncome').value) || 0;
+  const currentExpenses = parseFloat(document.getElementById('currentExpenses').value) || 0;
+  const expenseReduction = parseFloat(document.getElementById('expenseReduction').value) || 20;
+  const clientSS = parseFloat(document.getElementById('retirementClientSS').value) || 0;
+  const spouseSS = parseFloat(document.getElementById('retirementSpouseSS').value) || 0;
+  const pension = parseFloat(document.getElementById('pensionIncome').value) || 0;
+  const rental = parseFloat(document.getElementById('rentalIncome').value) || 0;
+  const withdrawalRate = parseFloat(document.getElementById('withdrawalRate').value) || 4;
+
+  // FIX: Get current values from table cells by index (cell[1] = current value column)
+  let totalRetirementAssets = 0;
+  ['#taxDeferredTable','#taxFreeTable','#taxableTable'].forEach(sel => {
+    document.querySelectorAll(sel+' tbody tr').forEach(row => {
+      totalRetirementAssets += parseNum(row.cells[1].querySelector('input').value);
+    });
+  });
+  document.getElementById('totalRetirementAssets').value = formatNumber(totalRetirementAssets);
+
+  const annualWithdrawal = totalRetirementAssets * (withdrawalRate / 100);
+  const monthlyIncome = clientSS + spouseSS + pension + rental;
+  const annualIncome = (monthlyIncome * 12) + annualWithdrawal;
+  const retirementExpenses = currentExpenses * (1 - expenseReduction / 100);
+  const totalMonthlyDebt = parseFloat(document.getElementById('totalMonthlyDebt').textContent.replace(/[$,]/g, '')) || 0;
+  const annualDebt = totalMonthlyDebt * 12;
+  const gap = annualIncome - retirementExpenses - annualDebt;
+  const inflationRate = 0.03;
+  const year20Income = annualIncome * Math.pow(1 + inflationRate, 20);
+  const year20Expenses = retirementExpenses * Math.pow(1 + inflationRate, 20);
+
+  document.getElementById('retirementIncomeSummary').innerHTML = '<div style="background:var(--grid);padding:25px;border-radius:var(--radius-md);border:2px solid rgba(37,99,235,0.15);"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:25px;"><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#60a5fa);display:flex;align-items:center;justify-content:center;"><i class="fas fa-hand-holding-usd" style="color:white;font-size:1.2rem;"></i></div><div><div style="font-size:0.85rem;color:var(--muted);font-weight:500;">Client Social Security</div><div style="font-size:1.5rem;font-weight:700;color:var(--ink);font-family:Roboto,sans-serif;">'+fmt(clientSS)+'<span style="font-size:0.85rem;color:var(--muted);font-weight:400;">/mo</span></div></div></div><div style="font-size:0.9rem;color:var(--muted);">Annual: <strong style="color:var(--ink);">'+fmt(clientSS*12)+'</strong></div></div><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#60a5fa);display:flex;align-items:center;justify-content:center;"><i class="fas fa-hand-holding-usd" style="color:white;font-size:1.2rem;"></i></div><div><div style="font-size:0.85rem;color:var(--muted);font-weight:500;">Spouse Social Security</div><div style="font-size:1.5rem;font-weight:700;color:var(--ink);font-family:Roboto,sans-serif;">'+fmt(spouseSS)+'<span style="font-size:0.85rem;color:var(--muted);font-weight:400;">/mo</span></div></div></div><div style="font-size:0.9rem;color:var(--muted);">Annual: <strong style="color:var(--ink);">'+fmt(spouseSS*12)+'</strong></div></div><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;"><i class="fas fa-chart-line" style="color:white;font-size:1.2rem;"></i></div><div><div style="font-size:0.85rem;color:var(--muted);font-weight:500;">'+withdrawalRate+'% Withdrawal</div><div style="font-size:1.5rem;font-weight:700;color:var(--ink);font-family:Roboto,sans-serif;">'+fmt(annualWithdrawal/12)+'<span style="font-size:0.85rem;color:var(--muted);font-weight:400;">/mo</span></div></div></div><div style="font-size:0.9rem;color:var(--muted);">Annual: <strong style="color:var(--ink);">'+fmt(annualWithdrawal)+'</strong></div></div>'+((pension+rental>0)?'<div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;"><i class="fas fa-plus-circle" style="color:white;font-size:1.2rem;"></i></div><div><div style="font-size:0.85rem;color:var(--muted);font-weight:500;">Other Income</div><div style="font-size:1.5rem;font-weight:700;color:var(--ink);font-family:Roboto,sans-serif;">'+fmt(pension+rental)+'<span style="font-size:0.85rem;color:var(--muted);font-weight:400;">/mo</span></div></div></div><div style="font-size:0.9rem;color:var(--muted);">Annual: <strong style="color:var(--ink);">'+fmt((pension+rental)*12)+'</strong></div></div>':'')+'</div><div style="background:linear-gradient(135deg,#60a5fa,#3b82f6);padding:25px;border-radius:var(--radius-md);color:white;margin-bottom:20px;"><div style="font-size:0.95rem;font-weight:600;opacity:0.9;margin-bottom:10px;"><i class="fas fa-wallet"></i> TOTAL RETIREMENT INCOME</div><div style="display:flex;align-items:baseline;gap:15px;"><div style="font-size:2.5rem;font-weight:800;font-family:Roboto,sans-serif;">'+fmt(annualIncome)+'</div><div style="font-size:1.1rem;opacity:0.8;">per year</div></div><div style="margin-top:10px;font-size:1rem;opacity:0.9;">'+fmt(annualIncome/12)+'/month</div></div><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);"><h5 style="margin-bottom:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;"><i class="fas fa-calendar-plus"></i> Long-Term Projections (3% Inflation)</h5><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;"><div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:5px;">Income in 20 Years</div><div style="font-size:1.4rem;font-weight:700;color:var(--primary);font-family:Roboto,sans-serif;">'+fmt(year20Income)+'</div></div><div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:5px;">Expenses in 20 Years</div><div style="font-size:1.4rem;font-weight:700;color:var(--danger);font-family:Roboto,sans-serif;">'+fmt(year20Expenses)+'</div></div></div></div></div>';
+
+  displayGapAnalysis(annualIncome, retirementExpenses, annualDebt, gap);
+  calculateTaxAnalysis(annualIncome, clientSS * 12, spouseSS * 12);
+}
+function displayGapAnalysis(income, expenses, debt, gap) {
+  const gapPct = income > 0 ? (gap / income) * 100 : 0;
+  const pos = gap >= 0;
+  document.getElementById('gapAnalysisResults').innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:25px;"><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);border-top:4px solid var(--success);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;"><i class="fas fa-arrow-down" style="color:var(--success);"></i> Total Income</div><div style="font-size:1.8rem;font-weight:700;color:var(--success);font-family:Roboto,sans-serif;">'+fmt(income)+'</div></div><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);border-top:4px solid var(--warning);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;"><i class="fas fa-shopping-cart" style="color:var(--warning);"></i> Expenses</div><div style="font-size:1.8rem;font-weight:700;color:var(--warning);font-family:Roboto,sans-serif;">'+fmt(expenses)+'</div></div><div style="background:white;padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);border-top:4px solid var(--danger);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;"><i class="fas fa-credit-card" style="color:var(--danger);"></i> Debt Payments</div><div style="font-size:1.8rem;font-weight:700;color:var(--danger);font-family:Roboto,sans-serif;">'+fmt(debt)+'</div></div><div style="background:'+(pos?'linear-gradient(135deg,rgba(16,185,129,0.1),rgba(5,150,105,0.05))':'linear-gradient(135deg,rgba(239,68,68,0.1),rgba(220,38,38,0.05))')+';padding:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-xs);border:2px solid '+(pos?'var(--success)':'var(--danger)')+';"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;"><i class="fas '+(pos?'fa-check-circle':'fa-exclamation-triangle')+'" style="color:'+(pos?'var(--success)':'var(--danger)')+';"></i> '+(pos?'Surplus':'Shortfall')+'</div><div style="font-size:1.8rem;font-weight:700;color:'+(pos?'var(--success)':'var(--danger)')+';font-family:Roboto,sans-serif;">'+fmt(Math.abs(gap))+'</div><div style="font-size:0.9rem;color:var(--muted);margin-top:8px;">'+Math.abs(gapPct).toFixed(1)+'% of income</div></div></div><div style="background:'+(pos?'linear-gradient(135deg,rgba(16,185,129,0.05),rgba(5,150,105,0.02))':'linear-gradient(135deg,rgba(239,68,68,0.05),rgba(220,38,38,0.02))')+';padding:20px;border-radius:var(--radius-md);border-left:4px solid '+(pos?'var(--success)':'var(--danger)')+';"><h5 style="margin-bottom:10px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;"><i class="fas '+(pos?'fa-thumbs-up':'fa-clipboard-list')+'"></i> '+(pos?'Congratulations!':'Action Items')+'</h5><p style="margin:0;color:var(--muted);line-height:1.6;">'+(pos?'You have a projected surplus of <strong style="color:var(--success);">'+fmt(gap)+'</strong> annually. This provides a comfortable buffer for unexpected expenses, additional lifestyle goals, or legacy planning.':'You have a projected shortfall of <strong style="color:var(--danger);">'+fmt(Math.abs(gap))+'</strong> annually. Recommendations: <strong>(1)</strong> Increase retirement savings now, <strong>(2)</strong> Consider delaying Social Security, <strong>(3)</strong> Explore annuity products, <strong>(4)</strong> Reduce expenses in retirement, or <strong>(5)</strong> Plan for part-time work.')+'</p></div>';
+}
+
+function calculateTaxAnalysis(totalIncome, clientSS, spouseSS) {
+  const totalSS = clientSS + spouseSS;
+  const provIncome = totalIncome - totalSS + (totalSS * 0.5);
+  let taxableSS = 0;
+  if (provIncome > 44000) taxableSS = totalSS * 0.85;
+  else if (provIncome > 32000) taxableSS = totalSS * 0.50;
+  const AGI = totalIncome - totalSS + taxableSS;
+  let bracket='', bracketRate=0, estTax=0;
+  if (AGI<=23200) { bracket='10%'; bracketRate=10; estTax=AGI*0.10; }
+  else if (AGI<=94300) { bracket='12%'; bracketRate=12; estTax=2320+(AGI-23200)*0.12; }
+  else if (AGI<=201050) { bracket='22%'; bracketRate=22; estTax=10852+(AGI-94300)*0.22; }
+  else if (AGI<=383900) { bracket='24%'; bracketRate=24; estTax=34337+(AGI-201050)*0.24; }
+  else if (AGI<=487450) { bracket='32%'; bracketRate=32; estTax=78221+(AGI-383900)*0.32; }
+  else if (AGI<=731200) { bracket='35%'; bracketRate=35; estTax=111357+(AGI-487450)*0.35; }
+  else { bracket='37%'; bracketRate=37; estTax=196669.50+(AGI-731200)*0.37; }
+  const effRate = AGI > 0 ? (estTax/AGI)*100 : 0;
+  let tips = '';
+  if (bracketRate<=12) tips += '<li><strong>Low Tax Bracket:</strong> Excellent opportunity for Roth conversions before RMDs begin.</li>';
+  if (bracketRate>=22) tips += '<li><strong>Consider:</strong> Qualified Charitable Distributions (QCDs) from IRAs to reduce taxable income.</li>';
+  if (taxableSS>totalSS*0.5) tips += '<li><strong>High SS Taxation:</strong> Consider strategies to reduce provisional income and lower SS taxation.</li>';
+  tips += '<li><strong>Tax Diversification:</strong> Balance withdrawals from tax-deferred, tax-free, and taxable accounts to optimize tax liability.</li><li><strong>IRMAA Planning:</strong> Monitor income to avoid Medicare surcharges (starts at $206,000 for married couples).</li>';
+  document.getElementById('taxBracketAnalysis').innerHTML = '<div style="background:white;padding:25px;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);"><h5 style="margin-bottom:20px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;"><i class="fas fa-file-invoice-dollar"></i> Estimated Tax Analysis (2024 Rates)</h5><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;"><div style="padding:20px;background:var(--grid);border-radius:var(--radius-md);border-left:4px solid var(--primary);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;">Adjusted Gross Income (AGI)</div><div style="font-size:1.6rem;font-weight:700;color:var(--primary);font-family:Roboto,sans-serif;">'+fmt(AGI)+'</div></div><div style="padding:20px;background:var(--grid);border-radius:var(--radius-md);border-left:4px solid var(--warning);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;">Marginal Tax Bracket</div><div style="font-size:1.6rem;font-weight:700;color:var(--warning);font-family:Roboto,sans-serif;">'+bracket+'</div><div style="font-size:0.85rem;color:var(--muted);margin-top:5px;">Married Filing Jointly</div></div><div style="padding:20px;background:var(--grid);border-radius:var(--radius-md);border-left:4px solid var(--danger);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;">Estimated Annual Tax</div><div style="font-size:1.6rem;font-weight:700;color:var(--danger);font-family:Roboto,sans-serif;">'+fmt(estTax)+'</div><div style="font-size:0.85rem;color:var(--muted);margin-top:5px;">Effective Rate: '+effRate.toFixed(1)+'%</div></div><div style="padding:20px;background:var(--grid);border-radius:var(--radius-md);border-left:4px solid var(--primary-light);"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;">Taxable Social Security</div><div style="font-size:1.6rem;font-weight:700;color:var(--primary);font-family:Roboto,sans-serif;">'+fmt(taxableSS)+'</div><div style="font-size:0.85rem;color:var(--muted);margin-top:5px;">'+(totalSS>0?((taxableSS/totalSS)*100).toFixed(0):0)+'% of total SS</div></div></div><div style="margin-top:20px;padding:15px;background:linear-gradient(135deg,rgba(147,197,253,0.1),rgba(37,99,235,0.02));border-radius:var(--radius-sm);border-left:4px solid var(--primary);"><h6 style="margin-bottom:10px;font-weight:700;color:var(--ink);"><i class="fas fa-lightbulb"></i> Tax Planning Opportunities</h6><ul style="margin:0;padding-left:20px;color:var(--muted);line-height:1.8;">'+tips+'</ul></div></div>';
+}
+// Initialize
+function initialize() {
+  initCharts();
+  // FIX: Load from consistent key 'lifecycleData'
+  const saved = localStorage.getItem('lifecycleData');
+  if (saved) { try { loadAllData(JSON.parse(saved)); } catch(e) { console.error('Error loading saved data:', e); } }
+  updateScenarioDropdown();
+  updateScenarioList();
+  calculateTaxBracket();
+  calculateConversion();
+  calculateSocialSecurity();
+  const ca = document.querySelector('[data-key="currentAge"]');
+  if (ca) { const ssAge = document.getElementById('ssCurrentAge'); if (ssAge) ssAge.value = ca.value; }
+  recalc();
+}
+
+window.addEventListener('DOMContentLoaded', initialize);
+
+document.addEventListener('DOMContentLoaded', function() {
+  const ca = document.querySelector('[data-key="currentAge"]');
+  if (ca) ca.addEventListener('input', function() {
+    const ssAge = document.getElementById('ssCurrentAge');
+    if (ssAge) ssAge.value = this.value;
+  });
+});
+
+window.addEventListener('beforeunload', function() { autoSaveToLocalStorage(); });
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+window.addEventListener('load', function() { calculateRetirementIncome(); });
+</script>
+</body>
+</html>
